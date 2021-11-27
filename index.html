@@ -162,6 +162,9 @@
           if (!buttonsLocked["left"]) {
             console.log("A is pressed");
 
+            myPositionX -= MOVE_SPEED;
+            users[myRoomId].setPosition(myPositionX, myPositionY);
+
             buttonsLocked["left"] = true;
             let moveResult = await Moralis.Cloud.run("move", {
               direction: "left",
@@ -173,6 +176,9 @@
           if (!buttonsLocked["down"]) {
             console.log("S is pressed");
 
+            myPositionY += MOVE_SPEED;
+            users[myRoomId].setPosition(myPositionX, myPositionY);
+
             buttonsLocked["down"] = true;
             let moveResult = await Moralis.Cloud.run("move", {
               direction: "down",
@@ -183,6 +189,9 @@
         } else if (this.dKey.isDown) {
           if (!buttonsLocked["right"]) {
             console.log("D is pressed");
+
+            myPositionX += MOVE_SPEED;
+            users[myRoomId].setPosition(myPositionX, myPositionY);
 
             buttonsLocked["right"] = true;
             let moveResult = await Moralis.Cloud.run("move", {
