@@ -26,13 +26,16 @@
       var state = {};
       var sprites = [];
       var buttonsLocked = {};
-      var gameInitialized = false;
+      let gameInitialized = false;
 
       const PLAYER_SIZE = 50;
       const MOVE_COOLOFF = 300;
       const MOVE_SPEED = 15;
 
-      var lastMove = 0;
+      let lastMove = 0; // date
+
+      let myPositionX = 0;
+      let myPositionY = 0;
 
       async function login() {
         console.log("login clicked");
@@ -85,19 +88,24 @@
           Phaser.Input.Keyboard.KeyCodes.D
         );
 
-        let query = new Moralis.Query("Room1");
-        let subscription = await query.subscribe();
+        const query = new Moralis.Query("Room1");
+        const subscription = await query.subscribe();
 
         subscription.on("update", (object) => {
-          if (!users[object.id])
+          if (!users[object.id]) {
+            // if new player
+            const newX = object.get("x");
+            const newY = object.get("y");
+            myPositionX = newX;
+            myPositionY = newY;
             users[object.id] = this.add.rectangle(
-              object.get("x"),
-              object.get("y"),
+              newX,
+              newY,
               PLAYER_SIZE,
               PLAYER_SIZE,
               0x6666ff
             );
-          else {
+          } else {
             let user = users[object.id];
             user.setPosition(object.get("x"), object.get("y"));
           }
