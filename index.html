@@ -1,5 +1,3 @@
-
-
 <!--
 
 1) AUTHENTICATE WITH METAMASK
@@ -9,177 +7,174 @@
 -->
 
 <html>
-<head>
-  <title>Metamask Demo</title>
+  <head>
+    <title>Metamask Demo</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-  <script src="https://npmcdn.com/moralis@0.0.6/dist/moralis.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script src="https://npmcdn.com/moralis@0.0.6/dist/moralis.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+  </head>
 
+  <body>
+    <button onclick="login()">Login with Metamask</button>
+    <br /><br />
 
+    <script>
+      Moralis.initialize("APP ID"); // Application id from moralis.io
+      Moralis.serverURL = "SERVER URL"; //Server url from moralis.io
 
-</head>
+      var state = {};
+      var sprites = [];
+      var buttonsLocked = {};
+      var gameInitialized = false;
 
-<body>
+      const PLAYER_SIZE = 50;
+      const MOVE_COOLOFF = 300;
 
-  <button onclick="login()">Login with Metamask</button>
-  <br><br>
+      var lastMove = 0;
 
-  <script>
-    Moralis.initialize("APP ID"); // Application id from moralis.io
-    Moralis.serverURL = "SERVER URL"; //Server url from moralis.io
-
-    var state = {}
-    var sprites = []
-    var buttonsLocked = {}
-    var gameInitialized = false;
-
-    const PLAYER_SIZE = 50;
-    const MOVE_COOLOFF = 300;
-
-    var lastMove = 0;
-
-
-    async function login(){
-      console.log("login clicked");
-      var user = await Moralis.Web3.authenticate();
-      if(user){
-        console.log(user);
-        location.reload(); 
-      }
-    }
-
-    console.log(Moralis.User.current())
-
-    var config = {
-      type: Phaser.AUTO,
-      width: 1200,
-      height: 700,
-      scene: {
-        preload: preload,
-        create: create,
-        update: update
-      },
-      physics: {
-        default: 'arcade',
-        arcade: { debug: true }
-      }
-    };
-
-    var game = new Phaser.Game(config);
-    var context;
-
-    var users = [];
-
-    function preload ()
-    {
-      context = this;
-    }
-
-    async function create ()
-    {
-      if(!Moralis.User.current())
-        return;
-
-      this.wKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-      this.aKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-      this.sKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-      this.dKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-
-      let query = new Moralis.Query('Room1');
-      let subscription = await query.subscribe();
-
-      subscription.on('update', (object) => {
-
-        if(!users[object.id])
-          users[object.id] = this.add.rectangle(object.get("x"), object.get("y"), PLAYER_SIZE, PLAYER_SIZE, 0x6666ff);
-        else{
-          let user = users[object.id];
-          user.setPosition(object.get("x"),object.get("y"))
-        }
-      });
-
-      await Moralis.Cloud.run("move", {direction:null}); //just to register the player
-
-      let nearbyPlayers = await Moralis.Cloud.run("playersNearby"); 
-      nearbyPlayers.forEach(player => {
-        users[player.id] = this.add.rectangle(player.get("x"), player.get("y"), PLAYER_SIZE, PLAYER_SIZE, 0x6666ff);
-      });
-
-      gameInitialized = true;
-    }
-
-    async function  update ()
-    {
-      if(!gameInitialized)
-        return;
-
-      cursors = this.input.keyboard.createCursorKeys();
-      const params =  { cursors: cursors };
-
-      // dont move if cool off hasnt passed
-      if(new Date()-lastMove < MOVE_COOLOFF)
-        return
-      
-      lastMove = new Date();
-
-      if (this.wKey.isDown) {
-
-        if(!buttonsLocked["up"]){
-          console.log('W is pressed');
-
-          buttonsLocked["up"]=true;
-          let moveResult = await Moralis.Cloud.run("move", {direction:"up"});
-          console.log(moveResult)
-          buttonsLocked["up"]=false;
-        }
-
-      }
-      else if(this.aKey.isDown){
-        if(!buttonsLocked["left"]){
-          console.log('A is pressed');
-
-          buttonsLocked["left"]=true;
-          let moveResult = await Moralis.Cloud.run("move", {direction:"left"});
-          console.log(moveResult)
-          buttonsLocked["left"]=false;
-        }
-      }
-      else if(this.sKey.isDown){
-        if(!buttonsLocked["down"]){
-          console.log('S is pressed');
-
-          buttonsLocked["down"]=true;
-          let moveResult = await Moralis.Cloud.run("move", {direction:"down"});
-          console.log(moveResult)
-          buttonsLocked["down"]=false;
-        }
-      }
-      else if(this.dKey.isDown){
-        if(!buttonsLocked["right"]){
-          console.log('D is pressed');
-
-          buttonsLocked["right"]=true;
-          let moveResult = await Moralis.Cloud.run("move", {direction:"right"});
-          console.log(moveResult)
-          buttonsLocked["right"]=false;
+      async function login() {
+        console.log("login clicked");
+        var user = await Moralis.Web3.authenticate();
+        if (user) {
+          console.log(user);
+          location.reload();
         }
       }
 
-    }
+      console.log(Moralis.User.current());
 
+      var config = {
+        type: Phaser.AUTO,
+        width: 1200,
+        height: 700,
+        scene: {
+          preload: preload,
+          create: create,
+          update: update,
+        },
+        physics: {
+          default: "arcade",
+          arcade: { debug: true },
+        },
+      };
 
+      var game = new Phaser.Game(config);
+      var context;
 
+      var users = [];
 
+      function preload() {
+        context = this;
+      }
 
+      async function create() {
+        if (!Moralis.User.current()) return;
 
+        this.wKey = this.input.keyboard.addKey(
+          Phaser.Input.Keyboard.KeyCodes.W
+        );
+        this.aKey = this.input.keyboard.addKey(
+          Phaser.Input.Keyboard.KeyCodes.A
+        );
+        this.sKey = this.input.keyboard.addKey(
+          Phaser.Input.Keyboard.KeyCodes.S
+        );
+        this.dKey = this.input.keyboard.addKey(
+          Phaser.Input.Keyboard.KeyCodes.D
+        );
 
-  </script>
+        let query = new Moralis.Query("Room1");
+        let subscription = await query.subscribe();
 
+        subscription.on("update", (object) => {
+          if (!users[object.id])
+            users[object.id] = this.add.rectangle(
+              object.get("x"),
+              object.get("y"),
+              PLAYER_SIZE,
+              PLAYER_SIZE,
+              0x6666ff
+            );
+          else {
+            let user = users[object.id];
+            user.setPosition(object.get("x"), object.get("y"));
+          }
+        });
 
-</body>
+        await Moralis.Cloud.run("move", { direction: null }); //just to register the player
 
+        let nearbyPlayers = await Moralis.Cloud.run("playersNearby");
+        nearbyPlayers.forEach((player) => {
+          users[player.id] = this.add.rectangle(
+            player.get("x"),
+            player.get("y"),
+            PLAYER_SIZE,
+            PLAYER_SIZE,
+            0x6666ff
+          );
+        });
 
+        gameInitialized = true;
+      }
 
+      async function update() {
+        if (!gameInitialized) return;
 
+        cursors = this.input.keyboard.createCursorKeys();
+        const params = { cursors: cursors };
+
+        // dont move if cool off hasnt passed
+        if (new Date() - lastMove < MOVE_COOLOFF) return;
+
+        lastMove = new Date();
+
+        if (this.wKey.isDown) {
+          if (!buttonsLocked["up"]) {
+            console.log("W is pressed");
+
+            buttonsLocked["up"] = true;
+            let moveResult = await Moralis.Cloud.run("move", {
+              direction: "up",
+            });
+            console.log(moveResult);
+            buttonsLocked["up"] = false;
+          }
+        } else if (this.aKey.isDown) {
+          if (!buttonsLocked["left"]) {
+            console.log("A is pressed");
+
+            buttonsLocked["left"] = true;
+            let moveResult = await Moralis.Cloud.run("move", {
+              direction: "left",
+            });
+            console.log(moveResult);
+            buttonsLocked["left"] = false;
+          }
+        } else if (this.sKey.isDown) {
+          if (!buttonsLocked["down"]) {
+            console.log("S is pressed");
+
+            buttonsLocked["down"] = true;
+            let moveResult = await Moralis.Cloud.run("move", {
+              direction: "down",
+            });
+            console.log(moveResult);
+            buttonsLocked["down"] = false;
+          }
+        } else if (this.dKey.isDown) {
+          if (!buttonsLocked["right"]) {
+            console.log("D is pressed");
+
+            buttonsLocked["right"] = true;
+            let moveResult = await Moralis.Cloud.run("move", {
+              direction: "right",
+            });
+            console.log(moveResult);
+            buttonsLocked["right"] = false;
+          }
+        }
+      }
+    </script>
+  </body>
 </html>
