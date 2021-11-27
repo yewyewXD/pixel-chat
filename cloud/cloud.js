@@ -3,7 +3,7 @@
 const HALF_PLAYER_SIZE = 25;
 const MOVE_SPEED = 15;
 const DRAW_DISTANCE = 500;
-const MOVE_COOLOFF = 400;
+const MOVE_COOLOFF = 2000;
 const SCREEN_WIDTH = 1200;
 const SCREEN_HEIGHT = 700; // milliseconds between registering new commands for same user on same core
 
@@ -15,18 +15,18 @@ Moralis.Cloud.define("move", async (request) => {
     return "You need to login!";
   }
 
-  if (lastMoved[user.id]) {
-    let timeNow = new Date();
-    let lastTime = lastMoved[user.id];
-    let timeDiff = timeNow - lastTime;
-    logger.info(timeDiff);
+  // if (lastMoved[user.id]) {
+  //   let timeNow = new Date();
+  //   let lastTime = lastMoved[user.id];
+  //   let timeDiff = timeNow - lastTime;
+  //   logger.info(timeDiff);
 
-    if (timeDiff < MOVE_COOLOFF) {
-      return "moves locked for this user - cooling off";
-    }
-  }
+  //   if (timeDiff < MOVE_COOLOFF) {
+  //     return "moves locked for this user - cooling off";
+  //   }
+  // }
 
-  lastMoved[user.id] = new Date();
+  // lastMoved[user.id] = new Date();
 
   const direction = request.params.direction;
 
