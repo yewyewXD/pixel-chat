@@ -114,6 +114,8 @@
             );
           } else if (newX !== myPositionX || newY !== myPositionY) {
             users[roomId].setPosition(newX, newY);
+            myPositionX = newX;
+            myPositionY = newY;
           }
         });
 
