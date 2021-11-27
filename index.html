@@ -36,6 +36,7 @@
 
       let myPositionX = 0;
       let myPositionY = 0;
+      let myRoomId = "";
 
       async function login() {
         console.log("login clicked");
@@ -92,13 +93,15 @@
         const subscription = await query.subscribe();
 
         subscription.on("update", (object) => {
-          if (!users[object.id]) {
+          const roomId = object.id;
+          if (!users[roomId]) {
             // if new player
             const newX = object.get("x");
             const newY = object.get("y");
             myPositionX = newX;
             myPositionY = newY;
-            users[object.id] = this.add.rectangle(
+            myRoomId = roomId;
+            users[roomId] = this.add.rectangle(
               newX,
               newY,
               PLAYER_SIZE,
