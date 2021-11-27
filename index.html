@@ -94,13 +94,17 @@
 
         subscription.on("update", (object) => {
           const roomId = object.id;
+          const newX = object.get("x");
+          const newY = object.get("y");
+
+          // if new player
           if (!users[roomId]) {
-            // if new player
-            const newX = object.get("x");
-            const newY = object.get("y");
+            // remember my position and id
             myPositionX = newX;
             myPositionY = newY;
             myRoomId = roomId;
+
+            // create new player
             users[roomId] = this.add.rectangle(
               newX,
               newY,
@@ -108,9 +112,8 @@
               PLAYER_SIZE,
               0x6666ff
             );
-          } else {
-            let user = users[object.id];
-            user.setPosition(object.get("x"), object.get("y"));
+          } else if (newX !== myPositionX || newY !== myPositionY) {
+            users[roomId].setPosition(newX, newY);
           }
         });
 
@@ -144,6 +147,9 @@
         if (this.wKey.isDown) {
           if (!buttonsLocked["up"]) {
             console.log("W is pressed");
+
+            myPositionY -= MOVE_SPEED;
+            users[myRoomId].setPosition(myPositionX, myPositionY);
 
             buttonsLocked["up"] = true;
             let moveResult = await Moralis.Cloud.run("move", {
