@@ -1,8 +1,11 @@
 // IMPORTANT DO NOT HAVE ANY STATE IN THIS CODE!!!
 
+const HALF_PLAYER_SIZE = 25;
 const MOVE_SPEED = 15;
 const DRAW_DISTANCE = 500;
-const MOVE_COOLOFF = 400; // milliseconds between registering new commands for same user on same core
+const MOVE_COOLOFF = 400;
+const SCREEN_WIDTH = 1200;
+const SCREEN_HEIGHT = 700; // milliseconds between registering new commands for same user on same core
 
 var lastMoved = {};
 
@@ -36,8 +39,20 @@ Moralis.Cloud.define("move", async (request) => {
   if (!roomEntry) {
     const roomEntry = new Room();
     roomEntry.set("player", user);
-    roomEntry.set("x", 0);
-    roomEntry.set("y", 0);
+    roomEntry.set(
+      "x",
+      getRandomInt({
+        min: 0 + HALF_PLAYER_SIZE,
+        max: SCREEN_WIDTH - HALF_PLAYER_SIZE,
+      })
+    );
+    roomEntry.set(
+      "y",
+      getRandomInt({
+        min: 0 + HALF_PLAYER_SIZE,
+        max: SCREEN_HEIGHT - HALF_PLAYER_SIZE,
+      })
+    );
     await roomEntry.save();
   }
 
