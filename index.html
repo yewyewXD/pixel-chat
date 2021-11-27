@@ -138,9 +138,6 @@
       async function update() {
         if (!gameInitialized) return;
 
-        cursors = this.input.keyboard.createCursorKeys();
-        const params = { cursors: cursors };
-
         // dont move if cool off hasnt passed
         if (new Date() - lastMove < MOVE_COOLOFF) return;
 
