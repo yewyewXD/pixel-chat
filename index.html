@@ -19,6 +19,8 @@
     <button onclick="login()">Login with Metamask</button>
     <br /><br />
 
+    <div id="timer">0</div>
+
     <script>
       Moralis.initialize("UuODzE6wvQ33uBGpHNI9psoJLOpCF2EZD0yG2E6d"); // Application id from moralis.io
       Moralis.serverURL = "https://vrbdy1tqiytg.usemoralis.com:2053/server"; //Server url from moralis.io
@@ -31,8 +33,9 @@
       const PLAYER_SIZE = 50;
       const MOVE_SPEED = 15;
 
-      const MOVE_COOLOFF = 200;
+      const MOVE_COOLOFF = 2000;
       let hasDoneCoolOff = true;
+      const timerElement = document.getElementById("timer");
 
       let lastMove = 0; // date
 
@@ -149,10 +152,13 @@
         // dont move if cool off hasnt passed
         if (new Date() - lastMove < MOVE_COOLOFF) {
           if (hasDoneCoolOff) hasDoneCoolOff = false;
-          console.log(`${((new Date() - lastMove) / MOVE_COOLOFF) * 100} %`);
+          timerElement.innerText = `${Math.round(
+            ((new Date() - lastMove) / MOVE_COOLOFF) * 100
+          )} %`;
+          return;
         } else if (!hasDoneCoolOff) {
           hasDoneCoolOff = true;
-          console.log("100%");
+          timerElement.innerText = "100%";
         }
 
         if (this.wKey.isDown) {
