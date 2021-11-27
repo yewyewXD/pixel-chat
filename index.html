@@ -95,10 +95,10 @@
         const query = new Moralis.Query("Room1");
         const subscription = await query.subscribe();
 
-        subscription.on("update", (object) => {
-          const roomId = object.id;
-          const newX = object.get("x");
-          const newY = object.get("y");
+        subscription.on("update", (room) => {
+          const roomId = room.id;
+          const newX = room.get("x");
+          const newY = room.get("y");
 
           // if new player
           if (!users[roomId]) {
@@ -115,7 +115,10 @@
               PLAYER_SIZE,
               0x6666ff
             );
-          } else if (newX !== myPositionX || newY !== myPositionY) {
+          } else if (
+            (newX !== myPositionX || newY !== myPositionY) &&
+            room.get("queueId") === currentQueueId
+          ) {
             users[roomId].setPosition(newX, newY);
             myPositionX = newX;
             myPositionY = newY;
