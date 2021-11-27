@@ -29,8 +29,10 @@
       let gameInitialized = false;
 
       const PLAYER_SIZE = 50;
-      const MOVE_COOLOFF = 200;
       const MOVE_SPEED = 15;
+
+      const MOVE_COOLOFF = 200;
+      let hasDoneCoolOff = true;
 
       let lastMove = 0; // date
 
@@ -145,7 +147,13 @@
         if (!gameInitialized) return;
 
         // dont move if cool off hasnt passed
-        if (new Date() - lastMove < MOVE_COOLOFF) return;
+        if (new Date() - lastMove < MOVE_COOLOFF) {
+          if (hasDoneCoolOff) hasDoneCoolOff = false;
+          console.log(`${((new Date() - lastMove) / MOVE_COOLOFF) * 100} %`);
+        } else if (!hasDoneCoolOff) {
+          hasDoneCoolOff = true;
+          console.log("100%");
+        }
 
         if (this.wKey.isDown) {
           if (!buttonsLocked["up"]) {
