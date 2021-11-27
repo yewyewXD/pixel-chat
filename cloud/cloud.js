@@ -28,7 +28,7 @@ Moralis.Cloud.define("move", async (request) => {
 
   // lastMoved[user.id] = new Date();
 
-  const direction = request.params.direction;
+  const { direction, queueId } = request.params;
 
   const Room = Moralis.Object.extend("Room1");
 
@@ -58,12 +58,16 @@ Moralis.Cloud.define("move", async (request) => {
 
   if (direction == "up") {
     roomEntry.set("y", roomEntry.get("y") - MOVE_SPEED);
+    roomEntry.set("queueId", queueId);
   } else if (direction == "down") {
     roomEntry.set("y", roomEntry.get("y") + MOVE_SPEED);
+    roomEntry.set("queueId", queueId);
   } else if (direction == "left") {
     roomEntry.set("x", roomEntry.get("x") - MOVE_SPEED);
+    roomEntry.set("queueId", queueId);
   } else if (direction == "right") {
     roomEntry.set("x", roomEntry.get("x") + MOVE_SPEED);
+    roomEntry.set("queueId", queueId);
   }
 
   await roomEntry.save();
