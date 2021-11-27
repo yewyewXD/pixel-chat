@@ -29,7 +29,7 @@
       let gameInitialized = false;
 
       const PLAYER_SIZE = 50;
-      const MOVE_COOLOFF = 2000;
+      const MOVE_COOLOFF = 200;
       const MOVE_SPEED = 15;
 
       let lastMove = 0; // date
@@ -37,6 +37,9 @@
       let myPositionX = 0;
       let myPositionY = 0;
       let myRoomId = "";
+
+      // server move request queue
+      let currentQueueId = 0;
 
       async function login() {
         console.log("login clicked");
@@ -148,10 +151,12 @@
             myPositionY -= MOVE_SPEED;
             users[myRoomId].setPosition(myPositionX, myPositionY);
             lastMove = new Date();
+            currentQueueId += 1;
 
             buttonsLocked["up"] = true;
             let moveResult = await Moralis.Cloud.run("move", {
               direction: "up",
+              queueId: currentQueueId,
             });
             console.log(moveResult);
             buttonsLocked["up"] = false;
@@ -163,10 +168,12 @@
             myPositionX -= MOVE_SPEED;
             users[myRoomId].setPosition(myPositionX, myPositionY);
             lastMove = new Date();
+            currentQueueId += 1;
 
             buttonsLocked["left"] = true;
             let moveResult = await Moralis.Cloud.run("move", {
               direction: "left",
+              queueId: currentQueueId,
             });
             console.log(moveResult);
             buttonsLocked["left"] = false;
@@ -178,10 +185,12 @@
             myPositionY += MOVE_SPEED;
             users[myRoomId].setPosition(myPositionX, myPositionY);
             lastMove = new Date();
+            currentQueueId += 1;
 
             buttonsLocked["down"] = true;
             let moveResult = await Moralis.Cloud.run("move", {
               direction: "down",
+              queueId: currentQueueId,
             });
             console.log(moveResult);
             buttonsLocked["down"] = false;
@@ -193,10 +202,12 @@
             myPositionX += MOVE_SPEED;
             users[myRoomId].setPosition(myPositionX, myPositionY);
             lastMove = new Date();
+            currentQueueId += 1;
 
             buttonsLocked["right"] = true;
             let moveResult = await Moralis.Cloud.run("move", {
               direction: "right",
+              queueId: currentQueueId,
             });
             console.log(moveResult);
             buttonsLocked["right"] = false;
