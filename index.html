@@ -29,10 +29,16 @@
     <div class="PercentContainer">
       <svg>
         <circle cx="70" cy="70" r="70" />
-        <circle class="StrokedCircle" cx="70" cy="70" r="70" />
+        <circle
+          class="StrokedCircle"
+          cx="70"
+          cy="70"
+          r="70"
+          style="stroke-dashoffset: 0 !important"
+        />
       </svg>
       <div class="Percent">
-        <div id="cool-off-percentage">0%</div>
+        <div id="cool-off-percentage">100%</div>
       </div>
     </div>
 
@@ -173,6 +179,9 @@
             users[roomId].setPosition(newX, newY);
             myPositionX = newX;
             myPositionY = newY;
+          } else if (moved.get("isActive") === false) {
+            users[roomId].destroy();
+            users[roomId] = null;
           } else {
             users[roomId].setPosition(newX, newY);
           }
@@ -190,6 +199,7 @@
           room: currentRoom,
         });
         nearbyPlayers.forEach((player) => {
+          console.log({ player });
           if (player.get("isActive")) {
             users[player.id] = this.add.rectangle(
               player.get("x"),
