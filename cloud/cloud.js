@@ -3,11 +3,11 @@
 const HALF_PLAYER_SIZE = 25;
 const MOVE_SPEED = 15;
 const DRAW_DISTANCE = 500;
-const MOVE_COOLOFF = 2000;
+const MOVE_COOLOFF = 100;
 const SCREEN_WIDTH = 1200;
 const SCREEN_HEIGHT = 700; // milliseconds between registering new commands for same user on same core
 
-// var lastMoved = {};
+var lastMoved = {};
 
 Moralis.Cloud.define("move", async (request) => {
   const user = request.user;
@@ -16,18 +16,16 @@ Moralis.Cloud.define("move", async (request) => {
     return;
   }
 
-  // if (lastMoved[user.id]) {
-  //   let timeNow = new Date();
-  //   let lastTime = lastMoved[user.id];
-  //   let timeDiff = timeNow - lastTime;
-  //   logger.info(timeDiff);
+  if (lastMoved[user.id]) {
+    const timeNow = new Date();
+    const lastTime = lastMoved[user.id];
+    const timeDiff = timeNow - lastTime;
+    logger.info(timeDiff);
 
-  //   if (timeDiff < MOVE_COOLOFF) {
-  //     return "moves locked for this user - cooling off";
-  //   }
-  // }
-
-  // lastMoved[user.id] = new Date();
+    if (timeDiff < MOVE_COOLOFF) {
+      return "moves locked for this user - cooling off";
+    }
+  }
 
   const { direction, queueId, room } = request.params;
 
@@ -60,15 +58,19 @@ Moralis.Cloud.define("move", async (request) => {
   if (direction == "up") {
     roomEntry.set("y", roomEntry.get("y") - MOVE_SPEED);
     roomEntry.set("queueId", queueId);
+    lastMoved[user.id] = new Date();
   } else if (direction == "down") {
     roomEntry.set("y", roomEntry.get("y") + MOVE_SPEED);
     roomEntry.set("queueId", queueId);
+    lastMoved[user.id] = new Date();
   } else if (direction == "left") {
     roomEntry.set("x", roomEntry.get("x") - MOVE_SPEED);
     roomEntry.set("queueId", queueId);
+    lastMoved[user.id] = new Date();
   } else if (direction == "right") {
     roomEntry.set("x", roomEntry.get("x") + MOVE_SPEED);
     roomEntry.set("queueId", queueId);
+    lastMoved[user.id] = new Date();
   }
 
   await roomEntry.save();
