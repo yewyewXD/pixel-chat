@@ -7,12 +7,13 @@ const MOVE_COOLOFF = 2000;
 const SCREEN_WIDTH = 1200;
 const SCREEN_HEIGHT = 700; // milliseconds between registering new commands for same user on same core
 
-var lastMoved = {};
+// var lastMoved = {};
 
 Moralis.Cloud.define("move", async (request) => {
   const user = request.user;
   if (!user) {
-    return "You need to login!";
+    alert("You need to login!");
+    return;
   }
 
   // if (lastMoved[user.id]) {
@@ -79,7 +80,8 @@ Moralis.Cloud.define("playersNearby", async (request) => {
   const user = request.user;
 
   if (!user) {
-    return "You need to login!";
+    alert("You need to login!");
+    return;
   }
 
   const { room } = request.params;
