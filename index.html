@@ -19,7 +19,12 @@
 
   <body>
     <button onclick="login()">Login with Metamask</button>
+    <button onclick="leaveRoom()">Leave Room</button>
     <br /><br />
+
+    <div>Select room:</div>
+    <div><button onclick="selectRoom('Room1')">Room1</button></div>
+    <div><button onclick="selectRoom('Room2')">Room2</button></div>
 
     <div class="PercentContainer">
       <svg>
@@ -57,6 +62,8 @@
       // server move request queue
       let currentQueueId = 0;
 
+      let currentRoom = "Lobby";
+
       async function login() {
         console.log("login clicked");
         var user = await Moralis.Web3.authenticate();
@@ -64,6 +71,16 @@
           console.log(user);
           location.reload();
         }
+      }
+
+      function selectRoom(room) {
+        localStorage.setItem("currentRoom", room);
+        window.location.reload();
+      }
+
+      function leaveRoom() {
+        localStorage.setItem("currentRoom", "Lobby");
+        window.location.reload();
       }
 
       console.log(Moralis.User.current());
@@ -93,6 +110,15 @@
       }
 
       async function create() {
+        const currentRoom = localStorage.getItem("currentRoom");
+        if (currentRoom === "Lobby") {
+          return;
+        } else if (!currentRoom) {
+          localStorage.setItem("currentRoom", "Lobby");
+          console.log("no current room");
+          return;
+        }
+
         if (!Moralis.User.current()) return;
 
         this.wKey = this.input.keyboard.addKey(
@@ -108,7 +134,7 @@
           Phaser.Input.Keyboard.KeyCodes.D
         );
 
-        const query = new Moralis.Query("Room1");
+        const query = new Moralis.Query(currentRoom);
         const subscription = await query.subscribe();
 
         subscription.on("update", (room) => {
