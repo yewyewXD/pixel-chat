@@ -22,9 +22,17 @@
     <button onclick="leaveRoom()">Leave Room</button>
     <br /><br />
 
-    <div>Select room:</div>
-    <div><button onclick="selectRoom('Room1')">Room1</button></div>
-    <div><button onclick="selectRoom('Room2')">Room2</button></div>
+    <div style="display: flex">
+      <div style="margin-right: 20px">
+        <div>Select room:</div>
+        <div><button onclick="selectRoom('Room1')">Room1</button></div>
+        <div><button onclick="selectRoom('Room2')">Room2</button></div>
+      </div>
+
+      <div>
+        <div>Current room: <span id="current-room">Lobby</span></div>
+      </div>
+    </div>
 
     <div class="PercentContainer">
       <svg>
@@ -68,7 +76,12 @@
       // server move request queue
       let currentQueueId = 0;
 
+      const currentRoomElement = document.getElementById("current-room");
       let currentRoom = localStorage.getItem("currentRoom");
+
+      window.onload = () => {
+        currentRoomElement.innerText = currentRoom;
+      };
 
       async function login() {
         console.log("login clicked");
