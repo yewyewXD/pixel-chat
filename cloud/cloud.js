@@ -2,7 +2,7 @@
 
 const HALF_PLAYER_SIZE = 25;
 const MOVE_SPEED = 15;
-const DRAW_DISTANCE = 500;
+// const DRAW_DISTANCE = 500;
 const MOVE_COOLOFF = 100;
 const SCREEN_WIDTH = 1200;
 const SCREEN_HEIGHT = 700; // milliseconds between registering new commands for same user on same core
@@ -100,24 +100,23 @@ Moralis.Cloud.define("playersNearby", async (request) => {
 
   if (userEntry) {
     const nearbyPlayerQuery = new Moralis.Query(Room);
-    nearbyPlayerQuery.lessThanOrEqualTo(
-      "x",
-      userEntry.get("x") + DRAW_DISTANCE
-    );
-    nearbyPlayerQuery.greaterThanOrEqualTo(
-      "x",
-      userEntry.get("x") - DRAW_DISTANCE
-    );
-    nearbyPlayerQuery.lessThanOrEqualTo(
-      "y",
-      userEntry.get("y") + DRAW_DISTANCE
-    );
-    nearbyPlayerQuery.greaterThanOrEqualTo(
-      "y",
-      userEntry.get("y") - DRAW_DISTANCE
-    );
+    // nearbyPlayerQuery.lessThanOrEqualTo(
+    //   "x",
+    //   userEntry.get("x") + DRAW_DISTANCE
+    // );
+    // nearbyPlayerQuery.greaterThanOrEqualTo(
+    //   "x",
+    //   userEntry.get("x") - DRAW_DISTANCE
+    // );
+    // nearbyPlayerQuery.lessThanOrEqualTo(
+    //   "y",
+    //   userEntry.get("y") + DRAW_DISTANCE
+    // );
+    // nearbyPlayerQuery.greaterThanOrEqualTo(
+    //   "y",
+    //   userEntry.get("y") - DRAW_DISTANCE
+    // );
     nearbyPlayerQuery.notEqualTo("player", user);
-    nearbyPlayerQuery.equalTo("isActive", true);
     const nearByPlayers = await nearbyPlayerQuery.find();
     return nearByPlayers;
   } else {
