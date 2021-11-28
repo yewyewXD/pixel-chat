@@ -169,7 +169,7 @@
               newY,
               PLAYER_SIZE,
               PLAYER_SIZE,
-              0x6666ff
+              moved.get("player").id === loginId ? 0x6666ff : 0xffffff
             );
           } else if (
             roomId === myRoomId &&
@@ -199,16 +199,13 @@
           room: currentRoom,
         });
         nearbyPlayers.forEach((player) => {
-          console.log({ player });
-          if (player.get("isActive")) {
-            users[player.id] = this.add.rectangle(
-              player.get("x"),
-              player.get("y"),
-              PLAYER_SIZE,
-              PLAYER_SIZE,
-              0xffffff
-            );
-          }
+          users[player.id] = this.add.rectangle(
+            player.get("x"),
+            player.get("y"),
+            PLAYER_SIZE,
+            PLAYER_SIZE,
+            0xffffff
+          );
         });
 
         gameInitialized = true;

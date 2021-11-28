@@ -35,9 +35,9 @@ Moralis.Cloud.define("move", async (request) => {
   query.equalTo("player", user);
   const roomEntry = await query.first();
 
+  // if first time in room
   if (!roomEntry) {
     const roomEntry = new Room();
-    roomEntry.set("isActive", true);
     roomEntry.set("player", user);
     roomEntry.set(
       "x",
@@ -58,6 +58,8 @@ Moralis.Cloud.define("move", async (request) => {
 
   if (isActive === false) {
     roomEntry.set("isActive", false);
+  } else if (isActive) {
+    roomEntry.set("isActive", true);
   }
 
   if (direction == "up") {
@@ -117,6 +119,7 @@ Moralis.Cloud.define("playersNearby", async (request) => {
     //   userEntry.get("y") - DRAW_DISTANCE
     // );
     nearbyPlayerQuery.notEqualTo("player", user);
+    nearbyPlayerQuery.equalTo("isActive", true);
     const nearByPlayers = await nearbyPlayerQuery.find();
     return nearByPlayers;
   } else {
