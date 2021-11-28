@@ -79,7 +79,15 @@
         }
       }
 
-      function selectRoom(room) {
+      async function selectRoom(room) {
+        if (currentRoom !== "Lobby" && currentRoom !== room) {
+          await Moralis.Cloud.run("move", {
+            direction: null,
+            queueId: null,
+            room: currentRoom,
+            isActive: false,
+          });
+        }
         localStorage.setItem("currentRoom", room);
         window.location.reload();
       }
@@ -94,6 +102,16 @@
         localStorage.setItem("currentRoom", "Lobby");
         window.location.reload();
       }
+
+      // window.onbeforeunload = () => {
+      //   Moralis.Cloud.run("move", {
+      //     direction: null,
+      //     queueId: null,
+      //     room: currentRoom,
+      //     isActive: false,
+      //   });
+      //   localStorage.setItem("currentRoom", "Lobby");
+      // };
 
       console.log(Moralis.User.current());
 
