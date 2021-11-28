@@ -48,7 +48,7 @@
       const PLAYER_SIZE = 50;
       const MOVE_SPEED = 15;
 
-      const MOVE_COOLOFF = 2000;
+      const MOVE_COOLOFF = 300;
       let hasDoneCoolOff = true;
       const coolOffPercentEl = document.getElementById("cool-off-percentage");
       const strokedCircleEl = document.querySelector(".StrokedCircle");
@@ -136,17 +136,20 @@
         const query = new Moralis.Query(currentRoom);
         const subscription = await query.subscribe();
 
-        subscription.on("update", (room) => {
-          const roomId = room.id;
-          const newX = room.get("x");
-          const newY = room.get("y");
+        subscription.on("update", (moved) => {
+          const roomId = moved.id;
+          const newX = moved.get("x");
+          const newY = moved.get("y");
+          const loginId = Moralis.User.current().id;
 
           // if new player
           if (!users[roomId]) {
-            // remember my position and id
-            myPositionX = newX;
-            myPositionY = newY;
-            myRoomId = roomId;
+            if (moved.get("player").id === loginId) {
+              // remember my position and id
+              myPositionX = newX;
+              myPositionY = newY;
+              myRoomId = roomId;
+            }
 
             // create new player
             users[roomId] = this.add.rectangle(
@@ -157,12 +160,15 @@
               0x6666ff
             );
           } else if (
+            roomId === myRoomId &&
             (newX !== myPositionX || newY !== myPositionY) &&
-            room.get("queueId") === currentQueueId
+            moved.get("queueId") === currentQueueId
           ) {
             users[roomId].setPosition(newX, newY);
             myPositionX = newX;
             myPositionY = newY;
+          } else {
+            users[roomId].setPosition(newX, newY);
           }
         });
 
@@ -173,7 +179,7 @@
           room: currentRoom,
         });
 
-        let nearbyPlayers = await Moralis.Cloud.run("playersNearby", {
+        const nearbyPlayers = await Moralis.Cloud.run("playersNearby", {
           room: currentRoom,
         });
         nearbyPlayers.forEach((player) => {
@@ -182,7 +188,7 @@
             player.get("y"),
             PLAYER_SIZE,
             PLAYER_SIZE,
-            0x6666ff
+            0xffffff
           );
         });
 
