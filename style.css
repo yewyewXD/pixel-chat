@@ -1,0 +1,42 @@
+circle {
+  fill: none;
+  stroke: black;
+  stroke-width: 10;
+  stroke-linecap: round;
+  transform: translate(5px, 5px);
+}
+
+circle:nth-child(2) {
+  stroke: orange;
+  stroke-dasharray: 440;
+  stroke-dashoffset: 440;
+}
+
+svg,
+.PercentContainer {
+  width: 150px;
+  height: 150px;
+  z-index: 1000;
+  position: relative;
+}
+
+.PercentContainer {
+  border-radius: 50%;
+}
+
+.Percent {
+  border-radius: 50%;
+  top: 0;
+  left: 0;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.StrokedCircle {
+  height: 100%;
+  width: 100%;
+}

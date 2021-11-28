@@ -13,13 +13,23 @@
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
     <script src="https://npmcdn.com/moralis@0.0.6/dist/moralis.js"></script>
     <script src="//cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+
+    <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
     <button onclick="login()">Login with Metamask</button>
     <br /><br />
 
-    <div id="timer">0</div>
+    <div class="PercentContainer">
+      <svg>
+        <circle cx="70" cy="70" r="70" />
+        <circle class="StrokedCircle" cx="70" cy="70" r="70" />
+      </svg>
+      <div class="Percent">
+        <div id="cool-off-percentage">0%</div>
+      </div>
+    </div>
 
     <script>
       Moralis.initialize("UuODzE6wvQ33uBGpHNI9psoJLOpCF2EZD0yG2E6d"); // Application id from moralis.io
@@ -35,7 +45,8 @@
 
       const MOVE_COOLOFF = 2000;
       let hasDoneCoolOff = true;
-      const timerElement = document.getElementById("timer");
+      const coolOffPercentEl = document.getElementById("cool-off-percentage");
+      const strokedCircleEl = document.querySelector(".StrokedCircle");
 
       let lastMove = 0; // date
 
@@ -152,13 +163,18 @@
         // dont move if cool off hasnt passed
         if (new Date() - lastMove < MOVE_COOLOFF) {
           if (hasDoneCoolOff) hasDoneCoolOff = false;
-          timerElement.innerText = `${Math.round(
+          const coolOffPercent = Math.round(
             ((new Date() - lastMove) / MOVE_COOLOFF) * 100
-          )} %`;
+          );
+          coolOffPercentEl.innerText = `${coolOffPercent} %`;
+          strokedCircleEl.style = `stroke-dasharray: ${
+            440 - (440 * coolOffPercent) / 100
+          } !important`;
           return;
         } else if (!hasDoneCoolOff) {
           hasDoneCoolOff = true;
-          timerElement.innerText = "100%";
+          strokedCircleEl.style = `stroke-dasharray: 0 !important`;
+          coolOffPercentEl.innerText = "100%";
         }
 
         if (this.wKey.isDown) {
