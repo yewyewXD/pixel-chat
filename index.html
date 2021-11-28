@@ -78,7 +78,13 @@
         window.location.reload();
       }
 
-      function leaveRoom() {
+      async function leaveRoom() {
+        await Moralis.Cloud.run("move", {
+          direction: null,
+          queueId: null,
+          room: currentRoom,
+          isActive: false,
+        });
         localStorage.setItem("currentRoom", "Lobby");
         window.location.reload();
       }
@@ -177,19 +183,22 @@
           direction: null,
           queueId: null,
           room: currentRoom,
+          isActive: true,
         });
 
         const nearbyPlayers = await Moralis.Cloud.run("playersNearby", {
           room: currentRoom,
         });
         nearbyPlayers.forEach((player) => {
-          users[player.id] = this.add.rectangle(
-            player.get("x"),
-            player.get("y"),
-            PLAYER_SIZE,
-            PLAYER_SIZE,
-            0xffffff
-          );
+          if (player.get("isActive")) {
+            users[player.id] = this.add.rectangle(
+              player.get("x"),
+              player.get("y"),
+              PLAYER_SIZE,
+              PLAYER_SIZE,
+              0xffffff
+            );
+          }
         });
 
         gameInitialized = true;
