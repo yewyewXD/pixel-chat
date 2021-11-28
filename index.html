@@ -62,7 +62,7 @@
       // server move request queue
       let currentQueueId = 0;
 
-      let currentRoom = "Lobby";
+      let currentRoom = localStorage.getItem("currentRoom");
 
       async function login() {
         console.log("login clicked");
@@ -110,7 +110,6 @@
       }
 
       async function create() {
-        const currentRoom = localStorage.getItem("currentRoom");
         if (currentRoom === "Lobby") {
           return;
         } else if (!currentRoom) {
@@ -167,9 +166,16 @@
           }
         });
 
-        await Moralis.Cloud.run("move", { direction: null }); //just to register the player
+        //just to register the player
+        await Moralis.Cloud.run("move", {
+          direction: null,
+          queueId: null,
+          room: currentRoom,
+        });
 
-        let nearbyPlayers = await Moralis.Cloud.run("playersNearby");
+        let nearbyPlayers = await Moralis.Cloud.run("playersNearby", {
+          room: currentRoom,
+        });
         nearbyPlayers.forEach((player) => {
           users[player.id] = this.add.rectangle(
             player.get("x"),
@@ -216,6 +222,7 @@
             let moveResult = await Moralis.Cloud.run("move", {
               direction: "up",
               queueId: currentQueueId,
+              room: currentRoom,
             });
             console.log(moveResult);
             buttonsLocked["up"] = false;
@@ -233,6 +240,7 @@
             let moveResult = await Moralis.Cloud.run("move", {
               direction: "left",
               queueId: currentQueueId,
+              room: currentRoom,
             });
             console.log(moveResult);
             buttonsLocked["left"] = false;
@@ -250,6 +258,7 @@
             let moveResult = await Moralis.Cloud.run("move", {
               direction: "down",
               queueId: currentQueueId,
+              room: currentRoom,
             });
             console.log(moveResult);
             buttonsLocked["down"] = false;
@@ -267,6 +276,7 @@
             let moveResult = await Moralis.Cloud.run("move", {
               direction: "right",
               queueId: currentQueueId,
+              room: currentRoom,
             });
             console.log(moveResult);
             buttonsLocked["right"] = false;

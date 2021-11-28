@@ -28,9 +28,9 @@ Moralis.Cloud.define("move", async (request) => {
 
   // lastMoved[user.id] = new Date();
 
-  const { direction, queueId } = request.params;
+  const { direction, queueId, room } = request.params;
 
-  const Room = Moralis.Object.extend("Room1");
+  const Room = Moralis.Object.extend(room);
 
   const query = new Moralis.Query(Room);
   query.equalTo("player", user);
@@ -82,7 +82,9 @@ Moralis.Cloud.define("playersNearby", async (request) => {
     return "You need to login!";
   }
 
-  const Room = Moralis.Object.extend("Room1");
+  const { room } = request.params;
+
+  const Room = Moralis.Object.extend(room);
   const query = new Moralis.Query(Room);
   query.equalTo("player", user);
   const userEntry = await query.first();
