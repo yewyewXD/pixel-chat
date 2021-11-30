@@ -54,9 +54,7 @@
       Moralis.initialize("UuODzE6wvQ33uBGpHNI9psoJLOpCF2EZD0yG2E6d"); // Application id from moralis.io
       Moralis.serverURL = "https://vrbdy1tqiytg.usemoralis.com:2053/server"; //Server url from moralis.io
 
-      var state = {};
-      var sprites = [];
-      var buttonsLocked = {};
+      const buttonsLocked = {};
       let gameInitialized = false;
 
       const PLAYER_SIZE = 50;
@@ -85,7 +83,7 @@
 
       async function login() {
         console.log("login clicked");
-        var user = await Moralis.Web3.authenticate();
+        const user = await Moralis.Web3.authenticate();
         if (user) {
           console.log(user);
           location.reload();
@@ -116,19 +114,9 @@
         window.location.reload();
       }
 
-      // window.onbeforeunload = () => {
-      //   Moralis.Cloud.run("move", {
-      //     direction: null,
-      //     queueId: null,
-      //     room: currentRoom,
-      //     isActive: false,
-      //   });
-      //   localStorage.setItem("currentRoom", "Lobby");
-      // };
-
       console.log(Moralis.User.current());
 
-      var config = {
+      const config = {
         type: Phaser.AUTO,
         width: 1200,
         height: 700,
@@ -143,11 +131,12 @@
         },
       };
 
-      var game = new Phaser.Game(config);
-      var context;
+      const game = new Phaser.Game(config);
 
-      var users = [];
+      let users = [];
+      let chats = [];
 
+      let context;
       function preload() {
         context = this;
       }
@@ -195,6 +184,12 @@
             }
 
             // create new player
+            this.add.text(newX - 25, newY - 55, "my text", {
+              font: "20px bold",
+              fontFamily: "'Press Start 2P', cursive",
+              color: "white",
+            });
+
             users[roomId] = this.add.rectangle(
               newX,
               newY,
