@@ -1,10 +1,37 @@
 body {
-  font-family: "VT323", monospace;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
   font-size: 26px;
+  font-family: "VT323", monospace;
 }
 
 button {
   padding: 10px 30px;
+  position: relative;
+  outline: none;
+  text-align: center;
+  transition: 0.5s;
+  background: transparent;
+  border: solid 1px black;
+}
+
+button:hover {
+  background: red url("./images/buttonPixel.png");
+  transition-delay: 0.4s;
+  animation: animate 0.4s steps(8) forwards;
+  background-size: 180px;
+  border: solid 1px red;
+  color: white;
+}
+
+@keyframes animate {
+  0% {
+    background-position-y: 0;
+  }
+  100% {
+    background-position-y: -400px;
+  }
 }
 
 circle {
