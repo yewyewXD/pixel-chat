@@ -155,7 +155,7 @@
       const game = new Phaser.Game(config);
 
       let users = [];
-      let chats = [];
+      let usernames = [];
 
       let context;
       function preload() {
@@ -205,12 +205,6 @@
             }
 
             // create new player
-            this.add.text(newX - 25, newY - 55, "my text", {
-              font: "20px bold",
-              fontFamily: "'Press Start 2P', cursive",
-              color: "white",
-            });
-
             users[roomId] = this.add.rectangle(
               newX,
               newY,
@@ -218,12 +212,19 @@
               PLAYER_SIZE,
               moved.get("player").id === loginId ? 0x6666ff : 0xffffff
             );
+
+            usernames[roomId] = this.add.text(newX - 13, newY - 55, "Me", {
+              font: "20px bold",
+              fontFamily: "'Press Start 2P', cursive",
+              color: "white",
+            });
           } else if (
             roomId === myRoomId &&
             (newX !== myPositionX || newY !== myPositionY) &&
             moved.get("queueId") === currentQueueId
           ) {
             users[roomId].setPosition(newX, newY);
+            usernames[roomId].setPosition(newX - 13, newY - 55);
             myPositionX = newX;
             myPositionY = newY;
           } else if (moved.get("isActive") === false) {
@@ -284,6 +285,7 @@
 
             myPositionY -= MOVE_SPEED;
             users[myRoomId].setPosition(myPositionX, myPositionY);
+            usernames[myRoomId].setPosition(myPositionX - 13, myPositionY - 55);
             lastMove = new Date();
             currentQueueId += 1;
 
@@ -302,6 +304,7 @@
 
             myPositionX -= MOVE_SPEED;
             users[myRoomId].setPosition(myPositionX, myPositionY);
+            usernames[myRoomId].setPosition(myPositionX - 13, myPositionY - 55);
             lastMove = new Date();
             currentQueueId += 1;
 
@@ -320,6 +323,7 @@
 
             myPositionY += MOVE_SPEED;
             users[myRoomId].setPosition(myPositionX, myPositionY);
+            usernames[myRoomId].setPosition(myPositionX - 13, myPositionY - 55);
             lastMove = new Date();
             currentQueueId += 1;
 
@@ -338,6 +342,7 @@
 
             myPositionX += MOVE_SPEED;
             users[myRoomId].setPosition(myPositionX, myPositionY);
+            usernames[myRoomId].setPosition(myPositionX - 13, myPositionY - 55);
             lastMove = new Date();
             currentQueueId += 1;
 
