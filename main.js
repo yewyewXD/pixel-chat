@@ -25,15 +25,11 @@ let myRoomId = "";
 let currentQueueId = 0;
 
 const currentRoomElement = document.getElementById("current-room");
-let currentRoom = localStorage.getItem("currentRoom") || "Lobby";
+let currentRoom = "Lobby";
 
 const loginScreenElement = document.querySelector(".LoginScreen");
 
 window.onload = () => {
-  if (!localStorage.getItem("currentRoom")) {
-    localStorage.setItem("currentRoom", "Lobby");
-  }
-
   currentRoomElement.innerText = currentRoom;
   if (!currentUser?.id) {
     loginScreenElement.style.display = "flex";
@@ -49,7 +45,6 @@ async function login() {
     loginScreenElement.style.opacity = 0;
     setTimeout(() => {
       loginScreenElement.style.display = "none";
-      loadGame();
     }, 500);
   }
 }
@@ -63,8 +58,9 @@ async function selectRoom(room) {
       isActive: false,
     });
   }
-  localStorage.setItem("currentRoom", room);
-  window.location.reload();
+  currentRoom = room;
+  currentRoomElement.innerText = room;
+  loadGame();
 }
 
 async function leaveRoom() {
@@ -74,7 +70,6 @@ async function leaveRoom() {
     room: currentRoom,
     isActive: false,
   });
-  localStorage.setItem("currentRoom", "Lobby");
   window.location.reload();
 }
 
@@ -109,7 +104,7 @@ function loadGame() {
     if (currentRoom === "Lobby") {
       return;
     } else if (!currentRoom) {
-      localStorage.setItem("currentRoom", "Lobby");
+      currentRoom = "Lobby";
       console.log("no current room");
       return;
     }
