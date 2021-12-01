@@ -34,25 +34,40 @@
       <div class="Main">
         <!-- Main: Left -->
         <div>
-          <div>Current room: <span id="current-room">Lobby</span></div>
+          <div>
+            <div>Current room: <span id="current-room">Lobby</span></div>
 
-          <div class="SelectRoom">
-            <div>Select room:</div>
+            <div class="SelectRoom">
+              <div>Select room:</div>
 
-            <div>
-              <button id="room-lobby-btn" onclick="leaveRoom()">Lobby</button>
+              <div>
+                <button id="room-lobby-btn" onclick="leaveRoom()">Lobby</button>
+              </div>
+
+              <div>
+                <button id="room-1-btn" onclick="selectRoom('Room1')">
+                  Room1
+                </button>
+              </div>
+
+              <div>
+                <button id="room-2-btn" onclick="selectRoom('Room2')">
+                  Room2
+                </button>
+              </div>
             </div>
+          </div>
 
-            <div>
-              <button id="room-1-btn" onclick="selectRoom('Room1')">
-                Room1
-              </button>
-            </div>
-
-            <div>
-              <button id="room-2-btn" onclick="selectRoom('Room2')">
-                Room2
-              </button>
+          <div class="CoolOff">
+            <div class="CoolOff__Title">Move Cooldown:</div>
+            <div class="PercentContainer">
+              <svg>
+                <circle cx="70" cy="70" r="70" />
+                <circle class="StrokedCircle" cx="70" cy="70" r="70" />
+              </svg>
+              <div class="Percent">
+                <div id="cool-off-percentage">100%</div>
+              </div>
             </div>
           </div>
         </div>
@@ -61,17 +76,10 @@
         <div id="phaser-parent" class="Game"></div>
 
         <!-- Main: Right -->
-        <div class="CoolOff">
-          <div class="CoolOff__Title">Move Cooldown</div>
-          <div class="PercentContainer">
-            <svg>
-              <circle cx="70" cy="70" r="70" />
-              <circle class="StrokedCircle" cx="70" cy="70" r="70" />
-            </svg>
-            <div class="Percent">
-              <div id="cool-off-percentage">100%</div>
-            </div>
-          </div>
+        <div class="Chat">
+          <div class="Chat__Title">Chat</div>
+          <div class="Chat__View">view</div>
+          <div class="Chat__InputBar">input bar</div>
         </div>
       </div>
     </div>
