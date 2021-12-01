@@ -1,6 +1,9 @@
 Moralis.initialize("UuODzE6wvQ33uBGpHNI9psoJLOpCF2EZD0yG2E6d"); // Application id from moralis.io
 Moralis.serverURL = "https://vrbdy1tqiytg.usemoralis.com:2053/server"; //Server url from moralis.io
 
+const currentUser =
+  Moralis.User.current() || JSON.parse(localStorage.getItem("currentUser"));
+
 const buttonsLocked = {};
 let gameInitialized = false;
 
@@ -24,8 +27,14 @@ let currentQueueId = 0;
 const currentRoomElement = document.getElementById("current-room");
 let currentRoom = localStorage.getItem("currentRoom");
 
+const loginScreenElement = document.querySelector(".LoginScreen");
+
 window.onload = () => {
+  localStorage.setItem("currentRoom", "Lobby");
   currentRoomElement.innerText = currentRoom;
+  if (!currentUser?.id) {
+    loginScreenElement.style.display = "flex";
+  }
 };
 
 async function login() {
@@ -33,7 +42,11 @@ async function login() {
   const user = await Moralis.Web3.authenticate();
   if (user) {
     console.log(user);
-    location.reload();
+    localStorage.setItem("currentUser", JSON.stringify(user));
+    loginScreenElement.style.opacity = 0;
+    setTimeout(() => {
+      loginScreenElement.style.display = "none";
+    }, 500);
   }
 }
 
@@ -60,8 +73,6 @@ async function leaveRoom() {
   localStorage.setItem("currentRoom", "Lobby");
   window.location.reload();
 }
-
-console.log(Moralis.User.current());
 
 function loadGame() {
   const config = {
@@ -99,7 +110,7 @@ function loadGame() {
       return;
     }
 
-    if (!Moralis.User.current()) return;
+    if (!currentUser) return;
 
     this.wKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
     this.aKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
@@ -113,7 +124,7 @@ function loadGame() {
       const roomId = moved.id;
       const newX = moved.get("x");
       const newY = moved.get("y");
-      const loginId = Moralis.User.current().id;
+      const loginId = currentUser.id;
 
       // if new player
       if (!users[roomId]) {

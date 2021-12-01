@@ -86,10 +86,11 @@ svg,
   width: 100%;
   background: lightgray;
   z-index: 9999999999;
-  display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  transition: 0.5s;
+  display: none;
 }
 
 .LoginScreen__Welcome {
