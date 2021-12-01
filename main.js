@@ -154,7 +154,7 @@ function loadGame() {
           newY,
           PLAYER_SIZE,
           PLAYER_SIZE,
-          moved.get("player").id === loginId ? 0x6666ff : 0xffffff
+          moved.get("player").id === loginId ? 0xff0000 : 0xffffff
         );
 
         usernames[roomId] = this.add.text(newX - 13, newY - 55, "Me", {

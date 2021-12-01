@@ -24,46 +24,59 @@
   </head>
 
   <body>
-    <div class="LoginScreen">
-      <div class="LoginScreen__Welcome">Welcome to Pixel Chat</div>
+    <div class="container">
+      <div class="LoginScreen">
+        <div class="LoginScreen__Welcome">Welcome to Pixel Chat</div>
 
-      <button onclick="login()">Login with Metamask</button>
-    </div>
-
-    <button onclick="leaveRoom()">Leave Room</button>
-    <br /><br />
-
-    <div style="display: flex">
-      <div style="margin-right: 20px">
-        <div>Select room:</div>
-        <div><button onclick="selectRoom('Room1')">Room1</button></div>
-        <div><button onclick="selectRoom('Room2')">Room2</button></div>
+        <button onclick="login()">Login with Metamask</button>
       </div>
 
-      <div>
-        <div>Current room: <span id="current-room">Lobby</span></div>
+      <div class="SelectRoomContainer">
+        <!-- Header: Left -->
+        <div>
+          <div>Current room: <span id="current-room">Lobby</span></div>
+
+          <div class="SelectRoom">
+            <div>Select room:</div>
+
+            <div>
+              <button id="room-lobby-btn" onclick="leaveRoom()">Lobby</button>
+            </div>
+
+            <div>
+              <button id="room-1-btn" onclick="selectRoom('Room1')">
+                Room1
+              </button>
+            </div>
+
+            <div>
+              <button id="room-2-btn" onclick="selectRoom('Room2')">
+                Room2
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Header: Right -->
+        <div class="PercentContainer">
+          <svg>
+            <circle cx="70" cy="70" r="70" />
+            <circle
+              class="StrokedCircle"
+              cx="70"
+              cy="70"
+              r="70"
+              style="stroke-dashoffset: 0 !important"
+            />
+          </svg>
+          <div class="Percent">
+            <div id="cool-off-percentage">100%</div>
+          </div>
+        </div>
       </div>
+
+      <div id="phaser-parent"></div>
     </div>
-
-    <button onclick="loadGame()">Load game</button>
-
-    <div class="PercentContainer">
-      <svg>
-        <circle cx="70" cy="70" r="70" />
-        <circle
-          class="StrokedCircle"
-          cx="70"
-          cy="70"
-          r="70"
-          style="stroke-dashoffset: 0 !important"
-        />
-      </svg>
-      <div class="Percent">
-        <div id="cool-off-percentage">100%</div>
-      </div>
-    </div>
-
-    <div id="phaser-parent"></div>
 
     <script src="./main.js"></script>
   </body>
