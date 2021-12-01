@@ -65,6 +65,7 @@ console.log(Moralis.User.current());
 
 const config = {
   type: Phaser.AUTO,
+  parent: "phaser-parent",
   width: 1200,
   height: 700,
   scene: {
