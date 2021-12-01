@@ -1,6 +1,8 @@
 Moralis.initialize("UuODzE6wvQ33uBGpHNI9psoJLOpCF2EZD0yG2E6d"); // Application id from moralis.io
 Moralis.serverURL = "https://vrbdy1tqiytg.usemoralis.com:2053/server"; //Server url from moralis.io
 
+let context;
+
 const currentUser =
   Moralis.User.current() || JSON.parse(localStorage.getItem("currentUser"));
 
@@ -50,17 +52,22 @@ async function login() {
 }
 
 async function selectRoom(room) {
-  if (currentRoom !== "Lobby" && currentRoom !== room) {
-    await Moralis.Cloud.run("move", {
-      direction: null,
-      queueId: null,
-      room: currentRoom,
-      isActive: false,
-    });
-  }
+  if (currentRoom === room) return;
+
+  await Moralis.Cloud.run("move", {
+    direction: null,
+    queueId: null,
+    room: currentRoom,
+    isActive: false,
+  });
+  const previousRoom = currentRoom;
   currentRoom = room;
   currentRoomElement.innerText = room;
-  loadGame();
+  if (previousRoom === "Lobby") {
+    loadGame();
+  } else {
+    refreshGame();
+  }
 }
 
 async function leaveRoom() {
@@ -70,7 +77,15 @@ async function leaveRoom() {
     room: currentRoom,
     isActive: false,
   });
-  window.location.reload();
+  currentRoom = "Lobby";
+  currentRoomElement.innerText = "Lobby";
+  refreshGame();
+}
+
+function refreshGame() {
+  context.registry.destroy(); // destroy registry
+  context.events.off(); // disable all active events
+  context.scene.restart(); // restart current scene
 }
 
 function loadGame() {
@@ -90,12 +105,11 @@ function loadGame() {
     },
   };
 
-  const game = new Phaser.Game(config);
+  new Phaser.Game(config);
 
   let users = [];
   let usernames = [];
 
-  let context;
   function preload() {
     context = this;
   }
