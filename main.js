@@ -131,9 +131,7 @@ function loadGame() {
     this.dKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
 
     const query = new Moralis.Query(currentRoom);
-    const query2 = new Moralis.Query("Chat1");
     const subscription = await query.subscribe();
-
     subscription.on("update", (moved) => {
       const roomId = moved.id;
       const newX = moved.get("x");
@@ -179,13 +177,24 @@ function loadGame() {
         users[roomId].setPosition(newX, newY);
       }
     });
-
     //just to register the player
     await Moralis.Cloud.run("move", {
       direction: null,
       queueId: null,
       room: currentRoom,
       isActive: true,
+    });
+
+    const chatQuery = new Moralis.Query(`${currentRoom}Chat`);
+    const chatSub = await chatQuery.subscribe();
+    chatSub.on("create", (chat) => {
+      console.log(chat.get("text"));
+    });
+
+    // initiate chat
+    await Moralis.Cloud.run("sendChat", {
+      room: currentRoom,
+      text: null,
     });
 
     const nearbyPlayers = await Moralis.Cloud.run("playersNearby", {

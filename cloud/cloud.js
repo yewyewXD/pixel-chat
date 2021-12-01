@@ -8,6 +8,37 @@ const SCREEN_WIDTH = 700;
 const SCREEN_HEIGHT = 500; // milliseconds between registering new commands for same user on same core
 
 var lastMoved = {};
+var lastChat = {};
+
+Moralis.Cloud.define("sendChat", async (request) => {
+  console.log("sent chat");
+  const user = request.user;
+  if (!user) {
+    alert("You need to login!");
+    return;
+  }
+
+  if (lastMoved[user.id]) {
+    const timeNow = new Date();
+    const lastTime = lastMoved[user.id];
+    const timeDiff = timeNow - lastTime;
+    logger.info(timeDiff);
+
+    if (timeDiff < MOVE_COOLOFF) {
+      return "chat locked for this user - cooling off";
+    }
+  }
+
+  const { room, text } = request.params;
+
+  const Chat = Moralis.Object.extend(`${room}Chat`);
+  const chatEntry = new Chat();
+  chatEntry.set("text", text);
+
+  await chatEntry.save();
+
+  return "chat sent";
+});
 
 Moralis.Cloud.define("move", async (request) => {
   const user = request.user;
@@ -37,23 +68,23 @@ Moralis.Cloud.define("move", async (request) => {
 
   // if first time in room
   if (!roomEntry) {
-    const roomEntry = new Room();
-    roomEntry.set("player", user);
-    roomEntry.set(
+    const firstEntry = new Room();
+    firstEntry.set("player", user);
+    firstEntry.set(
       "x",
       getRandomInt({
         min: 0 + HALF_PLAYER_SIZE,
         max: SCREEN_WIDTH - HALF_PLAYER_SIZE,
       })
     );
-    roomEntry.set(
+    firstEntry.set(
       "y",
       getRandomInt({
         min: 0 + HALF_PLAYER_SIZE,
         max: SCREEN_HEIGHT - HALF_PLAYER_SIZE,
       })
     );
-    await roomEntry.save();
+    await firstEntry.save();
   }
 
   if (isActive === false) {

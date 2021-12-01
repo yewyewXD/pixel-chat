@@ -55,6 +55,10 @@
                   Room2
                 </button>
               </div>
+
+              <div>
+                <button onclick="handleSendChat()">chat</button>
+              </div>
             </div>
           </div>
 
@@ -85,5 +89,14 @@
     </div>
 
     <script src="./main.js"></script>
+    <script>
+      async function handleSendChat() {
+        console.log("run");
+        await Moralis.Cloud.run("sendChat", {
+          room: currentRoom,
+          text: "hello world again",
+        });
+      }
+    </script>
   </body>
 </html>
