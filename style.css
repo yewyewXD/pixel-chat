@@ -3,17 +3,20 @@ body {
   padding: 0;
   box-sizing: border-box;
   font-size: 26px;
-  font-family: "VT323", monospace;
+  font-family: "VT323", monospace !important;
 }
 
 button {
-  padding: 10px 30px;
+  padding: 15px 45px;
   position: relative;
   outline: none;
   text-align: center;
   transition: 0.5s;
   background: transparent;
   border: solid 1px black;
+  font-family: "VT323", monospace !important;
+  font-size: 26px;
+  cursor: pointer;
 }
 
 button:hover {
@@ -75,4 +78,21 @@ svg,
 .StrokedCircle {
   height: 100%;
   width: 100%;
+}
+
+.LoginScreen {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background: lightgray;
+  z-index: 9999999999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.LoginScreen__Welcome {
+  font-size: 60px;
+  margin-bottom: 30px;
 }
