@@ -31,8 +31,8 @@
         <button onclick="login()">Login with Metamask</button>
       </div>
 
-      <div class="SelectRoomContainer">
-        <!-- Header: Left -->
+      <div class="Main">
+        <!-- Main: Left -->
         <div>
           <div>Current room: <span id="current-room">Lobby</span></div>
 
@@ -57,25 +57,23 @@
           </div>
         </div>
 
-        <!-- Header: Right -->
-        <div class="PercentContainer">
-          <svg>
-            <circle cx="70" cy="70" r="70" />
-            <circle
-              class="StrokedCircle"
-              cx="70"
-              cy="70"
-              r="70"
-              style="stroke-dashoffset: 0 !important"
-            />
-          </svg>
-          <div class="Percent">
-            <div id="cool-off-percentage">100%</div>
+        <!-- Main: Middle, Game -->
+        <div id="phaser-parent" class="Game"></div>
+
+        <!-- Main: Right -->
+        <div class="CoolOff">
+          <div class="CoolOff__Title">Cool Off</div>
+          <div class="PercentContainer">
+            <svg>
+              <circle cx="70" cy="70" r="70" />
+              <circle class="StrokedCircle" cx="70" cy="70" r="70" />
+            </svg>
+            <div class="Percent">
+              <div id="cool-off-percentage">100%</div>
+            </div>
           </div>
         </div>
       </div>
-
-      <div id="phaser-parent"></div>
     </div>
 
     <script src="./main.js"></script>

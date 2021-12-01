@@ -12,7 +12,7 @@ let gameInitialized = false;
 const PLAYER_SIZE = 50;
 const MOVE_SPEED = 15;
 
-const MOVE_COOLOFF = 300;
+const MOVE_COOLOFF = 500;
 let hasDoneCoolOff = true;
 const coolOffPercentEl = document.getElementById("cool-off-percentage");
 const strokedCircleEl = document.querySelector(".StrokedCircle");
@@ -92,8 +92,8 @@ function loadGame() {
   const config = {
     type: Phaser.AUTO,
     parent: "phaser-parent",
-    width: 1200,
-    height: 700,
+    width: 800,
+    height: 500,
     scene: {
       preload: preload,
       create: create,
@@ -213,14 +213,14 @@ function loadGame() {
         ((new Date() - lastMove) / MOVE_COOLOFF) * 100
       );
       coolOffPercentEl.innerText = `${coolOffPercent} %`;
-      strokedCircleEl.style = `stroke-dasharray: ${
-        440 - (440 * coolOffPercent) / 100
-      } !important`;
+      if (strokedCircleEl.style !== "stroke-dasharray: 440 !important") {
+        strokedCircleEl.style = "stroke: black !important";
+      }
       return;
     } else if (!hasDoneCoolOff) {
       hasDoneCoolOff = true;
-      strokedCircleEl.style = `stroke-dasharray: 0 !important`;
       coolOffPercentEl.innerText = "100%";
+      strokedCircleEl.style = `stroke: red !important`;
     }
 
     if (this.wKey.isDown) {

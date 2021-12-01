@@ -6,8 +6,27 @@ body {
   font-family: "VT323", monospace !important;
 }
 
+::-webkit-scrollbar {
+  width: 5px;
+  cursor: pointer;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: red;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 0, 0, 0.7);
+}
+
 .container {
-  width: 90%;
+  max-width: 1300px;
+  width: 95%;
   padding-top: 40px;
   margin: 0 auto;
   display: flex;
@@ -56,9 +75,10 @@ circle {
 }
 
 circle:nth-child(2) {
+  transition: 0.5s;
   stroke: red;
   stroke-dasharray: 440;
-  stroke-dashoffset: 440;
+  stroke-dashoffset: 0;
 }
 
 svg,
@@ -108,15 +128,29 @@ svg,
   margin-bottom: 30px;
 }
 
-.SelectRoomContainer {
+.Main {
   display: flex;
   width: 100%;
-  justify-content: space-between;
+}
+
+.Game {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.CoolOff {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.CoolOff__Title {
+  margin-bottom: 20px;
 }
 
 .SelectRoom {
   margin-top: 20px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
 }
