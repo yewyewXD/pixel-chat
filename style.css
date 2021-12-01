@@ -160,9 +160,8 @@ svg,
 .Chat {
   width: 300px;
   max-height: 600px;
-  overflow-y: auto;
   overflow-x: hidden;
-  display: flex;
+  display: none;
   flex-direction: column;
 }
 .Chat__Title {
@@ -173,6 +172,8 @@ svg,
 }
 .Chat__View {
   font-size: 22px;
+  max-height: 400px;
+  overflow-y: auto;
   border: solid 2px grey;
   border-top: none;
   flex-grow: 1;

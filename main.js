@@ -30,6 +30,7 @@ const currentRoomElement = document.getElementById("current-room");
 let currentRoom = "Lobby";
 
 const loginScreenElement = document.querySelector(".LoginScreen");
+const chatElement = document.querySelector(".Chat");
 
 window.onload = () => {
   currentRoomElement.innerText = currentRoom;
@@ -67,6 +68,12 @@ async function selectRoom(room) {
     loadGame();
   } else {
     refreshGame();
+  }
+
+  if (room === "Lobby") {
+    chatElement.style.display = "none";
+  } else {
+    chatElement.style.display = "flex";
   }
 }
 
