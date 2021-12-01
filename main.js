@@ -25,12 +25,15 @@ let myRoomId = "";
 let currentQueueId = 0;
 
 const currentRoomElement = document.getElementById("current-room");
-let currentRoom = localStorage.getItem("currentRoom");
+let currentRoom = localStorage.getItem("currentRoom") || "Lobby";
 
 const loginScreenElement = document.querySelector(".LoginScreen");
 
 window.onload = () => {
-  localStorage.setItem("currentRoom", "Lobby");
+  if (!localStorage.getItem("currentRoom")) {
+    localStorage.setItem("currentRoom", "Lobby");
+  }
+
   currentRoomElement.innerText = currentRoom;
   if (!currentUser?.id) {
     loginScreenElement.style.display = "flex";
@@ -46,6 +49,7 @@ async function login() {
     loginScreenElement.style.opacity = 0;
     setTimeout(() => {
       loginScreenElement.style.display = "none";
+      loadGame();
     }, 500);
   }
 }
