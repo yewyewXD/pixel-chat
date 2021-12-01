@@ -9,8 +9,8 @@ const currentUser =
 const buttonsLocked = {};
 let gameInitialized = false;
 
-const PLAYER_SIZE = 50;
-const MOVE_SPEED = 15;
+const PLAYER_SIZE = 20;
+const MOVE_SPEED = 10;
 
 const MOVE_COOLOFF = 500;
 let hasDoneCoolOff = true;
@@ -92,7 +92,7 @@ function loadGame() {
   const config = {
     type: Phaser.AUTO,
     parent: "phaser-parent",
-    width: 800,
+    width: 700,
     height: 500,
     scene: {
       preload: preload,
@@ -131,6 +131,7 @@ function loadGame() {
     this.dKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
 
     const query = new Moralis.Query(currentRoom);
+    const query2 = new Moralis.Query("Chat1");
     const subscription = await query.subscribe();
 
     subscription.on("update", (moved) => {
@@ -157,8 +158,8 @@ function loadGame() {
           moved.get("player").id === loginId ? 0xff0000 : 0xffffff
         );
 
-        usernames[roomId] = this.add.text(newX - 13, newY - 55, "Me", {
-          font: "20px bold",
+        usernames[roomId] = this.add.text(newX - 13, newY - 35, "Me", {
+          font: "18px bold",
           fontFamily: "'Press Start 2P', cursive",
           color: "white",
         });
@@ -168,7 +169,7 @@ function loadGame() {
         moved.get("queueId") === currentQueueId
       ) {
         users[roomId].setPosition(newX, newY);
-        usernames[roomId].setPosition(newX - 13, newY - 55);
+        usernames[roomId].setPosition(newX - 13, newY - 35);
         myPositionX = newX;
         myPositionY = newY;
       } else if (moved.get("isActive") === false) {
@@ -229,7 +230,7 @@ function loadGame() {
 
         myPositionY -= MOVE_SPEED;
         users[myRoomId].setPosition(myPositionX, myPositionY);
-        usernames[myRoomId].setPosition(myPositionX - 13, myPositionY - 55);
+        usernames[myRoomId].setPosition(myPositionX - 13, myPositionY - 35);
         lastMove = new Date();
         currentQueueId += 1;
 
@@ -248,7 +249,7 @@ function loadGame() {
 
         myPositionX -= MOVE_SPEED;
         users[myRoomId].setPosition(myPositionX, myPositionY);
-        usernames[myRoomId].setPosition(myPositionX - 13, myPositionY - 55);
+        usernames[myRoomId].setPosition(myPositionX - 13, myPositionY - 35);
         lastMove = new Date();
         currentQueueId += 1;
 
@@ -267,7 +268,7 @@ function loadGame() {
 
         myPositionY += MOVE_SPEED;
         users[myRoomId].setPosition(myPositionX, myPositionY);
-        usernames[myRoomId].setPosition(myPositionX - 13, myPositionY - 55);
+        usernames[myRoomId].setPosition(myPositionX - 13, myPositionY - 35);
         lastMove = new Date();
         currentQueueId += 1;
 
@@ -286,7 +287,7 @@ function loadGame() {
 
         myPositionX += MOVE_SPEED;
         users[myRoomId].setPosition(myPositionX, myPositionY);
-        usernames[myRoomId].setPosition(myPositionX - 13, myPositionY - 55);
+        usernames[myRoomId].setPosition(myPositionX - 13, myPositionY - 35);
         lastMove = new Date();
         currentQueueId += 1;
 

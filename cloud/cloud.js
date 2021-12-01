@@ -1,10 +1,10 @@
 // IMPORTANT DO NOT HAVE ANY STATE IN THIS CODE!!!
 
-const HALF_PLAYER_SIZE = 25;
-const MOVE_SPEED = 15;
+const HALF_PLAYER_SIZE = 10;
+const MOVE_SPEED = 10;
 // const DRAW_DISTANCE = 500;
 const MOVE_COOLOFF = 100;
-const SCREEN_WIDTH = 800;
+const SCREEN_WIDTH = 700;
 const SCREEN_HEIGHT = 500; // milliseconds between registering new commands for same user on same core
 
 var lastMoved = {};

@@ -132,6 +132,7 @@ svg,
 .Main {
   display: flex;
   width: 100%;
+  gap: 20px;
 }
 
 .Game {
@@ -158,14 +159,14 @@ svg,
 
 .Chat {
   width: 300px;
-  max-height: 500px;
+  max-height: 600px;
   overflow-y: auto;
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
 }
 .Chat__Title {
-  padding: 15px 30px;
+  padding: 10px 20px;
   background-color: black;
   color: white;
   width: 100%;
@@ -175,13 +176,13 @@ svg,
   border: solid 2px grey;
   border-top: none;
   flex-grow: 1;
-  padding: 15px 30px;
+  padding: 10px 20px;
 }
 .Chat__InputBar {
   font-size: 22px;
   display: flex;
   flex-direction: column;
-  padding: 15px 30px;
+  padding: 10px 20px;
   border: solid 2px grey;
   border-top: none;
 }
