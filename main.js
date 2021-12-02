@@ -4,7 +4,8 @@ Moralis.serverURL = "https://vrbdy1tqiytg.usemoralis.com:2053/server"; //Server 
 let context;
 
 const currentUser =
-  Moralis.User.current() || JSON.parse(localStorage.getItem("currentUser"));
+  Moralis.User.current() ||
+  JSON.parse(localStorage.getItem("currentUser"))?.user;
 
 const buttonsLocked = {};
 let gameInitialized = false;
@@ -36,8 +37,15 @@ const chatViewElement = document.querySelector(".Chat__View");
 
 window.onload = () => {
   currentRoomElement.innerText = currentRoom;
-  if (!currentUser?.id) {
-    loginScreenElement.style.display = "flex";
+  if (
+    JSON.parse(localStorage.getItem("currentUser"))?.expiry <= new Date() ||
+    !currentUser?.id
+  ) {
+    localStorage.setItem("currentUser", "");
+
+    if (loginScreenElement.style.display !== "flex") {
+      loginScreenElement.style.display = "flex";
+    }
   }
 };
 
@@ -46,7 +54,11 @@ async function login() {
   const user = await Moralis.Web3.authenticate();
   if (user) {
     console.log(user);
-    localStorage.setItem("currentUser", JSON.stringify(user));
+    const storedUser = {
+      user,
+      expiry: new Date() + 3.6e6, // 1 hour
+    };
+    localStorage.setItem("currentUser", JSON.stringify(storedUser));
     loginScreenElement.style.opacity = 0;
     setTimeout(() => {
       loginScreenElement.style.display = "none";
