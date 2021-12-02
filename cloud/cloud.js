@@ -25,6 +25,7 @@ Moralis.Cloud.define("sendChat", async (request) => {
     logger.info(timeDiff);
 
     if (timeDiff < MOVE_COOLOFF) {
+      alert("chat locked for this user - cooling off");
       return "chat locked for this user - cooling off";
     }
   }
@@ -55,6 +56,7 @@ Moralis.Cloud.define("move", async (request) => {
     logger.info(timeDiff);
 
     if (timeDiff < MOVE_COOLOFF) {
+      alert("moves locked for this user - cooling off");
       return "moves locked for this user - cooling off";
     }
   }
