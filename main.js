@@ -1,25 +1,23 @@
 Moralis.initialize("UuODzE6wvQ33uBGpHNI9psoJLOpCF2EZD0yG2E6d"); // Application id from moralis.io
 Moralis.serverURL = "https://vrbdy1tqiytg.usemoralis.com:2053/server"; //Server url from moralis.io
 
-let context;
-let game;
-
 const currentUser =
   Moralis.User.current() ||
   JSON.parse(localStorage.getItem("currentUser"))?.user;
 
-const buttonsLocked = {};
+let context;
+let game;
 let gameInitialized = false;
 
 const PLAYER_SIZE = 20;
 const MOVE_SPEED = 10;
+let lastMove = 0; // date
+const buttonsLocked = {};
 
 const MOVE_COOLOFF = 500;
 let hasDoneCoolOff = true;
 const coolOffPercentEl = document.getElementById("cool-off-percentage");
-const strokedCircleEl = document.querySelector(".StrokedCircle");
-
-let lastMove = 0; // date
+const coolOffCircle = document.querySelector(".StrokedCircle");
 
 let myPositionX = 0;
 let myPositionY = 0;
@@ -28,16 +26,17 @@ let myUsername = localStorage.getItem("username") || "";
 
 // server move request queue
 let currentQueueId = 0;
-
 const currentRoomElement = document.getElementById("current-room");
 let currentRoom = "Lobby";
 
 const loginScreenElement = document.querySelector(".LoginScreen");
-
 const loginBtnEl = document.getElementById("login-btn");
 const logoutBtnEl = document.getElementById("logout-btn");
+
 const chatElement = document.querySelector(".Chat");
 const chatViewElement = document.querySelector(".Chat__View");
+const chatInputEl = document.querySelector(".ChatForm__Input");
+const chatUsernameEl = document.querySelector(".ChatForm__Username");
 
 window.onload = () => {
   currentRoomElement.innerText = currentRoom;
@@ -53,6 +52,10 @@ window.onload = () => {
       loginScreenElement.style.display = "flex";
     }
   }
+
+  if (myUsername) {
+    chatUsernameEl.innerText = myUsername;
+  }
 };
 
 const nameFormEl = document.getElementById("name-form");
@@ -62,6 +65,7 @@ function handleInputUsername(e) {
   const name = nameInputEl.value;
   localStorage.setItem("username", name);
   myUsername = name;
+  chatUsernameEl.innerText = name;
 
   nameFormEl.style.opacity = 0;
 
@@ -154,18 +158,18 @@ async function leaveRoom() {
   }
 }
 
-const formInputEl = document.querySelector(".ChatForm__Input");
 async function handleSendChat(e) {
   e.preventDefault();
-  const inputValue = formInputEl.value;
+  const inputValue = chatInputEl.value;
   const newChatText = document.createElement("div");
-  newChatText.innerText = inputValue;
+  newChatText.innerText = `${myUsername}: ${inputValue}`;
   chatViewElement.appendChild(newChatText);
-  formInputEl.value = "";
+  chatInputEl.value = "";
   await Moralis.Cloud.run("sendChat", {
     room: currentRoom,
     text: inputValue,
     roomId: myRoomId,
+    username: myUsername,
   });
 }
 document.querySelector(".ChatForm").addEventListener("submit", handleSendChat);
@@ -277,10 +281,11 @@ function loadGame() {
     const chatSub = await chatQuery.subscribe();
     chatSub.on("create", (chat) => {
       const text = chat.get("text");
-      const chatSender = chat.get("player");
-      if (chatSender?.id !== currentUser?.id) {
+      const sender = chat.get("player");
+      const senderName = chat.get("username");
+      if (sender?.id !== currentUser?.id) {
         const newChatText = document.createElement("div");
-        newChatText.innerText = text;
+        newChatText.innerText = `${senderName}: ${text}`;
         chatViewElement.appendChild(newChatText);
       }
     });
@@ -311,14 +316,14 @@ function loadGame() {
         ((new Date() - lastMove) / MOVE_COOLOFF) * 100
       );
       coolOffPercentEl.innerText = `${coolOffPercent} %`;
-      if (strokedCircleEl.style !== "stroke-dasharray: 440 !important") {
-        strokedCircleEl.style = "stroke: black !important";
+      if (coolOffCircle.style !== "stroke-dasharray: 440 !important") {
+        coolOffCircle.style = "stroke: black !important";
       }
       return;
     } else if (!hasDoneCoolOff) {
       hasDoneCoolOff = true;
       coolOffPercentEl.innerText = "100%";
-      strokedCircleEl.style = `stroke: red !important`;
+      coolOffCircle.style = `stroke: red !important`;
     }
 
     if (this.wKey.isDown) {
