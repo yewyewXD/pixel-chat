@@ -134,6 +134,7 @@ async function handleSendChat(e) {
   await Moralis.Cloud.run("sendChat", {
     room: currentRoom,
     text: inputValue,
+    roomId: myRoomId,
   });
 }
 document.querySelector(".ChatForm").addEventListener("submit", handleSendChat);
