@@ -34,6 +34,7 @@ Moralis.Cloud.define("sendChat", async (request) => {
   const Chat = Moralis.Object.extend(`${room}Chat`);
   const chatEntry = new Chat();
   chatEntry.set("text", text);
+  chatEntry.set("player", user);
 
   await chatEntry.save();
 

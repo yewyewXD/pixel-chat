@@ -30,7 +30,9 @@ const currentRoomElement = document.getElementById("current-room");
 let currentRoom = "Lobby";
 
 const loginScreenElement = document.querySelector(".LoginScreen");
+
 const chatElement = document.querySelector(".Chat");
+const chatViewElement = document.querySelector(".Chat__View");
 
 window.onload = () => {
   currentRoomElement.innerText = currentRoom;
@@ -88,6 +90,21 @@ async function leaveRoom() {
   currentRoomElement.innerText = "Lobby";
   refreshGame();
 }
+
+const formInputEl = document.querySelector(".ChatForm__Input");
+async function handleSendChat(e) {
+  e.preventDefault();
+  const inputValue = formInputEl.value;
+  const newChatText = document.createElement("div");
+  newChatText.innerText = inputValue;
+  chatViewElement.appendChild(newChatText);
+  formInputEl.value = "";
+  await Moralis.Cloud.run("sendChat", {
+    room: currentRoom,
+    text: inputValue,
+  });
+}
+document.querySelector(".ChatForm").addEventListener("submit", handleSendChat);
 
 function refreshGame() {
   context.registry.destroy(); // destroy registry
@@ -195,7 +212,13 @@ function loadGame() {
     const chatQuery = new Moralis.Query(`${currentRoom}Chat`);
     const chatSub = await chatQuery.subscribe();
     chatSub.on("create", (chat) => {
-      console.log(chat.get("text"));
+      const text = chat.get("text");
+      const chatSender = chat.get("player");
+      if (chatSender.id !== currentUser.id) {
+        const newChatText = document.createElement("div");
+        newChatText.innerText = text;
+        chatViewElement.appendChild(newChatText);
+      }
     });
 
     // initiate chat
