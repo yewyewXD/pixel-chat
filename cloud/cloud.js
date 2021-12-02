@@ -63,7 +63,7 @@ Moralis.Cloud.define("move", async (request) => {
     }
   }
 
-  const { direction, queueId, room, isActive } = request.params;
+  const { direction, queueId, room, isActive, username } = request.params;
 
   const Room = Moralis.Object.extend(room);
 
@@ -75,6 +75,7 @@ Moralis.Cloud.define("move", async (request) => {
   if (!roomEntry) {
     const firstEntry = new Room();
     firstEntry.set("player", user);
+    firstEntry.set("username", username);
     firstEntry.set(
       "x",
       getRandomInt({
@@ -129,7 +130,7 @@ Moralis.Cloud.define("playersNearby", async (request) => {
     return;
   }
 
-  const { room } = request.params;
+  const { room, roomId } = request.params;
 
   const Room = Moralis.Object.extend(room);
   const query = new Moralis.Query(Room);
@@ -154,9 +155,9 @@ Moralis.Cloud.define("playersNearby", async (request) => {
     //   "y",
     //   userEntry.get("y") - DRAW_DISTANCE
     // );
-    nearbyPlayerQuery.notEqualTo("player", user);
     nearbyPlayerQuery.equalTo("isActive", true);
-    const nearByPlayers = await nearbyPlayerQuery.find();
+    nearbyPlayerQuery.notEqualTo("objectId", roomId);
+    const nearByPlayers = await nearbyPlayerQuery.find({ useMasterKey: true });
     return nearByPlayers;
   } else {
     return "Caller of this function could not be found!";

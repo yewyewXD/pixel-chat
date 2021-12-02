@@ -1,5 +1,6 @@
 Moralis.initialize("UuODzE6wvQ33uBGpHNI9psoJLOpCF2EZD0yG2E6d"); // Application id from moralis.io
 Moralis.serverURL = "https://vrbdy1tqiytg.usemoralis.com:2053/server"; //Server url from moralis.io
+Moralis.masterKey = "qXaCDPBjdEdmvFoTFFP5JLHgzpLr5Ilob2LLYd3d";
 
 const currentUser =
   Moralis.User.current() ||
@@ -111,6 +112,7 @@ async function selectRoom(room) {
     direction: null,
     queueId: null,
     room: currentRoom,
+    username: myUsername,
     isActive: false,
   });
   const previousRoom = currentRoom;
@@ -148,6 +150,7 @@ async function leaveRoom() {
     direction: null,
     queueId: null,
     room: currentRoom,
+    username: myUsername,
     isActive: false,
   });
   currentRoom = "Lobby";
@@ -229,24 +232,21 @@ function loadGame() {
       const roomId = moved.id;
       const newX = moved.get("x");
       const newY = moved.get("y");
-      const loginId = currentUser?.id;
 
-      // if new player
+      // if I were never here
       if (!users[roomId]) {
-        if (moved.get("player").id === loginId) {
-          // remember my position and id
-          myPositionX = newX;
-          myPositionY = newY;
-          myRoomId = roomId;
-        }
+        // remember my position and id
+        myPositionX = newX;
+        myPositionY = newY;
+        myRoomId = roomId;
 
-        // create new player
+        // create new character
         users[roomId] = this.add.rectangle(
           newX,
           newY,
           PLAYER_SIZE,
           PLAYER_SIZE,
-          moved.get("player").id === loginId ? 0xff0000 : 0xffffff
+          0xff0000
         );
 
         usernames[roomId] = this.add.text(newX - 13, newY - 35, myUsername, {
@@ -289,6 +289,7 @@ function loadGame() {
       direction: null,
       queueId: null,
       room: currentRoom,
+      username: myUsername,
       isActive: true,
     });
 
@@ -307,9 +308,11 @@ function loadGame() {
 
     const nearbyPlayers = await Moralis.Cloud.run("playersNearby", {
       room: currentRoom,
+      roomId: myRoomId,
     });
     nearbyPlayers.forEach((player) => {
       const playerUsername = player.get("username");
+      console.log({ player });
       const playerX = player.get("x");
       const playerY = player.get("y");
       const playerRoomId = player.id;
@@ -378,6 +381,7 @@ function loadGame() {
         let moveResult = await Moralis.Cloud.run("move", {
           direction: "up",
           queueId: currentQueueId,
+          username: myUsername,
           room: currentRoom,
         });
         console.log(moveResult);
@@ -400,6 +404,7 @@ function loadGame() {
         let moveResult = await Moralis.Cloud.run("move", {
           direction: "left",
           queueId: currentQueueId,
+          username: myUsername,
           room: currentRoom,
         });
         console.log(moveResult);
@@ -422,6 +427,7 @@ function loadGame() {
         let moveResult = await Moralis.Cloud.run("move", {
           direction: "down",
           queueId: currentQueueId,
+          username: myUsername,
           room: currentRoom,
         });
         console.log(moveResult);
@@ -444,6 +450,7 @@ function loadGame() {
         let moveResult = await Moralis.Cloud.run("move", {
           direction: "right",
           queueId: currentQueueId,
+          username: myUsername,
           room: currentRoom,
         });
         console.log(moveResult);
