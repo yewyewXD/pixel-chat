@@ -2,6 +2,7 @@ Moralis.initialize("UuODzE6wvQ33uBGpHNI9psoJLOpCF2EZD0yG2E6d"); // Application i
 Moralis.serverURL = "https://vrbdy1tqiytg.usemoralis.com:2053/server"; //Server url from moralis.io
 
 let context;
+let game;
 
 const currentUser =
   Moralis.User.current() ||
@@ -37,6 +38,8 @@ const chatViewElement = document.querySelector(".Chat__View");
 
 window.onload = () => {
   currentRoomElement.innerText = currentRoom;
+  highlightRoomButton("Lobby");
+
   if (
     JSON.parse(localStorage.getItem("currentUser"))?.expiry <= new Date() ||
     !currentUser?.id
@@ -69,6 +72,7 @@ async function login() {
 async function selectRoom(room) {
   if (currentRoom === room) return;
 
+  highlightRoomButton(room);
   await Moralis.Cloud.run("move", {
     direction: null,
     queueId: null,
@@ -91,7 +95,21 @@ async function selectRoom(room) {
   }
 }
 
+function highlightRoomButton(room) {
+  const allRoomNames = ["Room1", "Room2", "Lobby"];
+  const affectedButtonEl = document.getElementById(`${room}-btn`);
+  affectedButtonEl.classList.add("buttonFocus");
+
+  allRoomNames.forEach((roomName) => {
+    if (roomName !== room) {
+      const roomEl = document.getElementById(`${roomName}-btn`);
+      roomEl.classList.remove("buttonFocus");
+    }
+  });
+}
+
 async function leaveRoom() {
+  highlightRoomButton("Lobby");
   await Moralis.Cloud.run("move", {
     direction: null,
     queueId: null,
@@ -100,7 +118,9 @@ async function leaveRoom() {
   });
   currentRoom = "Lobby";
   currentRoomElement.innerText = "Lobby";
-  refreshGame();
+  if (game) {
+    game.destroy(true, false);
+  }
 }
 
 const formInputEl = document.querySelector(".ChatForm__Input");
@@ -141,7 +161,7 @@ function loadGame() {
     },
   };
 
-  new Phaser.Game(config);
+  game = new Phaser.Game(config);
 
   let users = [];
   let usernames = [];
@@ -172,7 +192,7 @@ function loadGame() {
       const roomId = moved.id;
       const newX = moved.get("x");
       const newY = moved.get("y");
-      const loginId = currentUser.id;
+      const loginId = currentUser?.id;
 
       // if new player
       if (!users[roomId]) {
@@ -226,17 +246,11 @@ function loadGame() {
     chatSub.on("create", (chat) => {
       const text = chat.get("text");
       const chatSender = chat.get("player");
-      if (chatSender.id !== currentUser.id) {
+      if (chatSender?.id !== currentUser?.id) {
         const newChatText = document.createElement("div");
         newChatText.innerText = text;
         chatViewElement.appendChild(newChatText);
       }
-    });
-
-    // initiate chat
-    await Moralis.Cloud.run("sendChat", {
-      room: currentRoom,
-      text: null,
     });
 
     const nearbyPlayers = await Moralis.Cloud.run("playersNearby", {

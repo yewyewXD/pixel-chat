@@ -49,6 +49,13 @@ button {
   cursor: pointer;
 }
 
+.buttonFocus {
+  background: red url("./images/buttonPixel.png");
+  background-size: 180px;
+  border: solid 1px red;
+  color: white;
+}
+
 button:hover {
   background: red url("./images/buttonPixel.png");
   transition-delay: 0.4s;
@@ -156,6 +163,7 @@ svg,
   margin-top: 40px;
   display: flex;
   flex-direction: column;
+  gap: 5px;
 }
 
 .Chat {
