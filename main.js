@@ -44,7 +44,7 @@ window.onload = () => {
     JSON.parse(localStorage.getItem("currentUser"))?.expiry <= new Date() ||
     !currentUser?.id
   ) {
-    localStorage.setItem("currentUser", "");
+    localStorage.removeItem("currentUser");
 
     if (loginScreenElement.style.display !== "flex") {
       loginScreenElement.style.display = "flex";
@@ -67,6 +67,15 @@ async function login() {
       loginScreenElement.style.display = "none";
     }, 500);
   }
+}
+
+async function logout() {
+  loginScreenElement.style.display = "flex";
+  setTimeout(() => {
+    loginScreenElement.style.opacity = 1;
+  }, 10);
+  localStorage.removeItem("currentUser");
+  await Moralis.User.logOut();
 }
 
 async function selectRoom(room) {
