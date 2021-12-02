@@ -106,19 +106,33 @@ async function logout() {
 }
 
 async function selectRoom(room) {
-  if (currentRoom === room) return;
+  const previousRoom = currentRoom;
+  if (previousRoom === room) return;
 
   highlightRoomButton(room);
+  // previous room -> inactive
   await Moralis.Cloud.run("move", {
     direction: null,
     queueId: null,
-    room: currentRoom,
+    room: previousRoom,
     username: myUsername,
     isActive: false,
   });
-  const previousRoom = currentRoom;
+
+  // new room -> active
+  if (room !== "Lobby") {
+    await Moralis.Cloud.run("move", {
+      direction: null,
+      queueId: null,
+      room: room,
+      username: myUsername,
+      isActive: true,
+    });
+  }
+
   currentRoom = room;
   currentRoomElement.innerText = room;
+
   if (previousRoom === "Lobby") {
     loadGame();
   } else {
