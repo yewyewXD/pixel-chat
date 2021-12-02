@@ -24,6 +24,7 @@ let lastMove = 0; // date
 let myPositionX = 0;
 let myPositionY = 0;
 let myRoomId = "";
+let myUsername = localStorage.getItem("username") || "";
 
 // server move request queue
 let currentQueueId = 0;
@@ -33,6 +34,7 @@ let currentRoom = "Lobby";
 
 const loginScreenElement = document.querySelector(".LoginScreen");
 
+const loginBtnEl = document.getElementById("login-btn");
 const logoutBtnEl = document.getElementById("logout-btn");
 const chatElement = document.querySelector(".Chat");
 const chatViewElement = document.querySelector(".Chat__View");
@@ -53,8 +55,24 @@ window.onload = () => {
   }
 };
 
+const nameFormEl = document.getElementById("name-form");
+const nameInputEl = document.querySelector(".LoginScreen__NameInput");
+function handleInputUsername(e) {
+  e.preventDefault();
+  const name = nameInputEl.value;
+  localStorage.setItem("username", name);
+  myUsername = name;
+
+  nameFormEl.style.opacity = 0;
+
+  setTimeout(() => {
+    nameFormEl.style.display = "none";
+    loginBtnEl.style.display = "inline-block";
+  }, 500);
+}
+nameFormEl.addEventListener("submit", handleInputUsername);
+
 async function login() {
-  console.log("login clicked");
   const user = await Moralis.Web3.authenticate();
   if (user) {
     console.log(user);
@@ -76,6 +94,7 @@ async function logout() {
     loginScreenElement.style.opacity = 1;
   }, 10);
   localStorage.removeItem("currentUser");
+  localStorage.removeItem("username");
   await Moralis.User.logOut();
 }
 

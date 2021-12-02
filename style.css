@@ -36,6 +36,15 @@ body {
   flex-direction: column;
 }
 
+input {
+  font-family: "VT323", monospace !important;
+}
+
+form {
+  margin: 0;
+  transition: 0.5s;
+}
+
 button {
   padding: 15px 45px;
   position: relative;
@@ -137,6 +146,17 @@ svg,
   margin-bottom: 30px;
 }
 
+.LoginScreen__NameInput {
+  border: none;
+  border-bottom: 2px solid grey;
+  outline: none;
+  transition: 0.5s;
+  width: 300px;
+  background-color: transparent;
+  font-size: 26px;
+  padding: 5px 0;
+}
+
 .Main {
   display: flex;
   width: 100%;
@@ -208,6 +228,7 @@ svg,
   transition: 0.5s;
   width: 100%;
   padding: 5px 0;
+  font-size: 18px;
 }
 .ChatForm__Input:focus {
   border-bottom: 2px red solid;

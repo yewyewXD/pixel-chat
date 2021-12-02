@@ -28,7 +28,17 @@
       <div class="LoginScreen">
         <div class="LoginScreen__Welcome">Welcome to Pixel Chat</div>
 
-        <button onclick="login()">Login with Metamask</button>
+        <form id="name-form">
+          <input
+            type="text"
+            class="LoginScreen__NameInput"
+            placeholder="Enter your username"
+          />
+        </form>
+
+        <button id="login-btn" style="display: none" onclick="login()">
+          Login with Metamask
+        </button>
       </div>
 
       <div class="Main">
@@ -85,7 +95,7 @@
               <input
                 type="text"
                 class="ChatForm__Input"
-                placeholder="Say something... (slow mode is on)"
+                placeholder="Say something..."
               />
             </form>
           </div>
