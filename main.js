@@ -15,7 +15,7 @@ const MOVE_SPEED = 10;
 let lastMove = 0; // date
 const buttonsLocked = {};
 
-const MOVE_COOLOFF = 500;
+const MOVE_COOLOFF = 300;
 let hasDoneCoolOff = true;
 const coolOffPercentEl = document.getElementById("cool-off-percentage");
 const coolOffCircle = document.querySelector(".StrokedCircle");
