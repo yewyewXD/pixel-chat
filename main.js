@@ -3,7 +3,7 @@ Moralis.serverURL = "https://vrbdy1tqiytg.usemoralis.com:2053/server"; //Server 
 
 const currentUser =
   Moralis.User.current() ||
-  JSON.parse(localStorage.getItem("currentUser"))?.user;
+  JSON.parse(window.localStorage.getItem("currentUser"))?.user;
 
 let context;
 let game;
@@ -22,7 +22,7 @@ const coolOffCircle = document.querySelector(".StrokedCircle");
 let myPositionX = 0;
 let myPositionY = 0;
 let myRoomId = "";
-let myUsername = localStorage.getItem("username") || "";
+let myUsername = window.localStorage.getItem("username") || "";
 
 // server move request queue
 let currentQueueId = 0;
@@ -43,10 +43,11 @@ window.onload = () => {
   highlightRoomButton("Lobby");
 
   if (
-    JSON.parse(localStorage.getItem("currentUser"))?.expiry <= new Date() ||
+    JSON.parse(window.localStorage.getItem("currentUser"))?.expiry <=
+      new Date() ||
     !currentUser?.id
   ) {
-    localStorage.removeItem("currentUser");
+    window.localStorage.removeItem("currentUser");
 
     if (loginScreenElement.style.display !== "flex") {
       loginScreenElement.style.display = "flex";
@@ -63,7 +64,7 @@ const nameInputEl = document.querySelector(".LoginScreen__NameInput");
 function handleInputUsername(e) {
   e.preventDefault();
   const name = nameInputEl.value;
-  localStorage.setItem("username", name);
+  window.localStorage.setItem("username", name);
   myUsername = name;
   chatUsernameEl.innerText = name;
 
@@ -84,7 +85,7 @@ async function login() {
       user,
       expiry: new Date() + 3.6e6, // 1 hour
     };
-    localStorage.setItem("currentUser", JSON.stringify(storedUser));
+    window.localStorage.setItem("currentUser", JSON.stringify(storedUser));
     loginScreenElement.style.opacity = 0;
     setTimeout(() => {
       loginScreenElement.style.display = "none";
@@ -97,8 +98,8 @@ async function logout() {
   setTimeout(() => {
     loginScreenElement.style.opacity = 1;
   }, 10);
-  localStorage.removeItem("currentUser");
-  localStorage.removeItem("username");
+  window.localStorage.removeItem("currentUser");
+  window.localStorage.removeItem("username");
   await Moralis.User.logOut();
 }
 
@@ -259,6 +260,7 @@ function loadGame() {
           newY - 35
         );
       } else if (
+        // change my position
         roomId === myRoomId &&
         (newX !== myPositionX || newY !== myPositionY) &&
         moved.get("queueId") === currentQueueId
@@ -274,7 +276,12 @@ function loadGame() {
         users[roomId].destroy();
         users[roomId] = null;
       } else {
+        // change other player's position
         users[roomId].setPosition(newX, newY);
+        usernames[roomId].setPosition(
+          newX - usernames[roomId].width / 2,
+          newY - 35
+        );
       }
     });
     //just to register the player
@@ -302,12 +309,32 @@ function loadGame() {
       room: currentRoom,
     });
     nearbyPlayers.forEach((player) => {
-      users[player.id] = this.add.rectangle(
-        player.get("x"),
-        player.get("y"),
+      const playerUsername = player.get("username");
+      const playerX = player.get("x");
+      const playerY = player.get("y");
+      const playerRoomId = player.id;
+      users[playerRoomId] = this.add.rectangle(
+        playerX,
+        playerY,
         PLAYER_SIZE,
         PLAYER_SIZE,
         0xffffff
+      );
+
+      usernames[playerRoomId] = this.add.text(
+        playerX - 13,
+        playerY - 35,
+        playerUsername,
+        {
+          font: "18px bold",
+          fontFamily: "'Press Start 2P', cursive",
+          color: "white",
+        }
+      );
+
+      usernames[playerRoomId].setPosition(
+        playerX - usernames[playerRoomId].width / 2,
+        playerY - 35
       );
     });
 
