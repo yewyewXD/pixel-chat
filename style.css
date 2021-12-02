@@ -186,4 +186,20 @@ svg,
   padding: 10px 20px;
   border: solid 2px grey;
   border-top: none;
+  display: flex;
+}
+
+.ChatForm {
+  margin: 0;
+}
+.ChatForm__Input {
+  border: none;
+  border-bottom: 2px solid grey;
+  outline: none;
+  transition: 0.5s;
+  width: 100%;
+  padding: 5px 0;
+}
+.ChatForm__Input:focus {
+  border-bottom: 2px red solid;
 }

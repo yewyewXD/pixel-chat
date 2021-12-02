@@ -79,20 +79,20 @@
         <div class="Chat">
           <div class="Chat__Title">Chat</div>
           <div class="Chat__View"></div>
-          <div class="Chat__InputBar">input bar</div>
+          <div class="Chat__InputBar">
+            <form class="ChatForm">
+              <div class="ChatForm__User">User Name</div>
+              <input
+                type="text"
+                class="ChatForm__Input"
+                placeholder="Say something... (slow mode is on)"
+              />
+            </form>
+          </div>
         </div>
       </div>
     </div>
 
     <script src="./main.js"></script>
-    <script>
-      async function handleSendChat() {
-        console.log("run");
-        await Moralis.Cloud.run("sendChat", {
-          room: currentRoom,
-          text: "hello world again",
-        });
-      }
-    </script>
   </body>
 </html>
