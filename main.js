@@ -248,18 +248,26 @@ function loadGame() {
           moved.get("player").id === loginId ? 0xff0000 : 0xffffff
         );
 
-        usernames[roomId] = this.add.text(newX - 13, newY - 35, "Me", {
+        usernames[roomId] = this.add.text(newX - 13, newY - 35, myUsername, {
           font: "18px bold",
           fontFamily: "'Press Start 2P', cursive",
           color: "white",
         });
+
+        usernames[roomId].setPosition(
+          newX - usernames[myRoomId].width / 2,
+          newY - 35
+        );
       } else if (
         roomId === myRoomId &&
         (newX !== myPositionX || newY !== myPositionY) &&
         moved.get("queueId") === currentQueueId
       ) {
         users[roomId].setPosition(newX, newY);
-        usernames[roomId].setPosition(newX - 13, newY - 35);
+        usernames[roomId].setPosition(
+          newX - usernames[roomId].width / 2,
+          newY - 35
+        );
         myPositionX = newX;
         myPositionY = newY;
       } else if (moved.get("isActive") === false) {
@@ -332,7 +340,10 @@ function loadGame() {
 
         myPositionY -= MOVE_SPEED;
         users[myRoomId].setPosition(myPositionX, myPositionY);
-        usernames[myRoomId].setPosition(myPositionX - 13, myPositionY - 35);
+        usernames[myRoomId].setPosition(
+          myPositionX - usernames[myRoomId].width / 2,
+          myPositionY - 35
+        );
         lastMove = new Date();
         currentQueueId += 1;
 
@@ -351,7 +362,10 @@ function loadGame() {
 
         myPositionX -= MOVE_SPEED;
         users[myRoomId].setPosition(myPositionX, myPositionY);
-        usernames[myRoomId].setPosition(myPositionX - 13, myPositionY - 35);
+        usernames[myRoomId].setPosition(
+          myPositionX - usernames[myRoomId].width / 2,
+          myPositionY - 35
+        );
         lastMove = new Date();
         currentQueueId += 1;
 
@@ -370,7 +384,10 @@ function loadGame() {
 
         myPositionY += MOVE_SPEED;
         users[myRoomId].setPosition(myPositionX, myPositionY);
-        usernames[myRoomId].setPosition(myPositionX - 13, myPositionY - 35);
+        usernames[myRoomId].setPosition(
+          myPositionX - usernames[myRoomId].width / 2,
+          myPositionY - 35
+        );
         lastMove = new Date();
         currentQueueId += 1;
 
@@ -389,7 +406,10 @@ function loadGame() {
 
         myPositionX += MOVE_SPEED;
         users[myRoomId].setPosition(myPositionX, myPositionY);
-        usernames[myRoomId].setPosition(myPositionX - 13, myPositionY - 35);
+        usernames[myRoomId].setPosition(
+          myPositionX - usernames[myRoomId].width / 2,
+          myPositionY - 35
+        );
         lastMove = new Date();
         currentQueueId += 1;
 
