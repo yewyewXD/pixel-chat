@@ -33,6 +33,7 @@ let currentRoom = "Lobby";
 
 const loginScreenElement = document.querySelector(".LoginScreen");
 
+const logoutBtnEl = document.getElementById("logout-btn");
 const chatElement = document.querySelector(".Chat");
 const chatViewElement = document.querySelector(".Chat__View");
 
@@ -97,10 +98,10 @@ async function selectRoom(room) {
     refreshGame();
   }
 
-  if (room === "Lobby") {
-    chatElement.style.display = "none";
-  } else {
+  if (room !== "Lobby") {
     chatElement.style.display = "flex";
+    logoutBtnEl.style.display = "none";
+    chatViewElement.innerHTML = "";
   }
 }
 
@@ -127,6 +128,8 @@ async function leaveRoom() {
   });
   currentRoom = "Lobby";
   currentRoomElement.innerText = "Lobby";
+  chatElement.style.display = "none";
+  logoutBtnEl.style.display = "block";
   if (game) {
     game.destroy(true, false);
   }
