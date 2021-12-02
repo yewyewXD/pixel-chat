@@ -9,6 +9,7 @@ const currentUser =
 let context;
 let game;
 let gameInitialized = false;
+let cursors;
 
 const PLAYER_SIZE = 20;
 const MOVE_SPEED = 10;
@@ -221,10 +222,7 @@ function loadGame() {
 
     if (!currentUser) return;
 
-    this.wKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-    this.aKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-    this.sKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-    this.dKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+    cursors = this.input.keyboard.createCursorKeys();
 
     const query = new Moralis.Query(currentRoom);
     const subscription = await query.subscribe();
@@ -364,9 +362,9 @@ function loadGame() {
       coolOffCircle.style = `stroke: red !important`;
     }
 
-    if (this.wKey.isDown) {
+    if (cursors.up.isDown) {
       if (!buttonsLocked["up"]) {
-        console.log("W is pressed");
+        console.log("UP is pressed");
 
         myPositionY -= MOVE_SPEED;
         users[myRoomId].setPosition(myPositionX, myPositionY);
@@ -387,9 +385,9 @@ function loadGame() {
         console.log(moveResult);
         buttonsLocked["up"] = false;
       }
-    } else if (this.aKey.isDown) {
+    } else if (cursors.left.isDown) {
       if (!buttonsLocked["left"]) {
-        console.log("A is pressed");
+        console.log("LEFT is pressed");
 
         myPositionX -= MOVE_SPEED;
         users[myRoomId].setPosition(myPositionX, myPositionY);
@@ -410,9 +408,9 @@ function loadGame() {
         console.log(moveResult);
         buttonsLocked["left"] = false;
       }
-    } else if (this.sKey.isDown) {
+    } else if (cursors.down.isDown) {
       if (!buttonsLocked["down"]) {
-        console.log("S is pressed");
+        console.log("DOWN is pressed");
 
         myPositionY += MOVE_SPEED;
         users[myRoomId].setPosition(myPositionX, myPositionY);
@@ -433,9 +431,9 @@ function loadGame() {
         console.log(moveResult);
         buttonsLocked["down"] = false;
       }
-    } else if (this.dKey.isDown) {
+    } else if (cursors.right.isDown) {
       if (!buttonsLocked["right"]) {
-        console.log("D is pressed");
+        console.log("RIGHT is pressed");
 
         myPositionX += MOVE_SPEED;
         users[myRoomId].setPosition(myPositionX, myPositionY);
