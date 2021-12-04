@@ -40,7 +40,7 @@ const loginBtnEl = document.getElementById("login-btn");
 const logoutBtnEl = document.getElementById("logout-btn");
 
 let lastChat = 0; // date
-let doneChatCoolOff = false;
+let doneChatCoolOff = true;
 const CHAT_COOLOFF = 300;
 const chatElement = document.querySelector(".Chat");
 const chatViewElement = document.querySelector(".Chat__View");
@@ -171,6 +171,7 @@ async function leaveRoom() {
 
 async function handleSendChat(e) {
   e.preventDefault();
+  lastChat = new Date();
   const inputValue = chatInputEl.value;
   const newChatText = document.createElement("div");
   newChatText.innerText = `${myUsername}: ${inputValue}`;
@@ -237,8 +238,10 @@ function loadGame() {
       const newX = moved.get("x");
       const newY = moved.get("y");
       const moveIsActive = moved.get("isActive");
+      const playerUsername = moved.get("username");
+      const player = moved.get("player");
 
-      // if I were never here
+      // if user were never here
       if (!users[roomId]) {
         // remember my position and id
         myPositionX = newX;
@@ -251,14 +254,19 @@ function loadGame() {
           newY,
           PLAYER_SIZE,
           PLAYER_SIZE,
-          0xff0000
+          player.id === currentUser.id ? 0xff0000 : 0xffffff
         );
 
-        usernames[roomId] = this.add.text(newX - 13, newY - 35, myUsername, {
-          font: "18px bold",
-          fontFamily: "'Press Start 2P', cursive",
-          color: "white",
-        });
+        usernames[roomId] = this.add.text(
+          newX - 13,
+          newY - 35,
+          playerUsername,
+          {
+            font: "18px bold",
+            fontFamily: "'Press Start 2P', cursive",
+            color: "white",
+          }
+        );
 
         usernames[roomId].setPosition(
           newX - usernames[myRoomId].width / 2,
@@ -374,9 +382,13 @@ function loadGame() {
     if (new Date() - lastChat < CHAT_COOLOFF) {
       if (doneChatCoolOff) doneChatCoolOff = false;
       console.log("chat CD");
+      if (+chatElement.style.opacity != 0.5) {
+        chatElement.style.opacity = 0.5;
+      }
       return;
     } else if (!doneChatCoolOff) {
       doneChatCoolOff = true;
+      chatElement.style.opacity = 1;
       console.log("done chat CD");
     }
 
