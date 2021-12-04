@@ -287,6 +287,8 @@ function loadGame() {
       } else if (moved.get("isActive") === false) {
         users[roomId].destroy();
         users[roomId] = null;
+        usernames[roomId].destroy();
+        usernames[roomId] = null;
       } else {
         // change other player's position
         users[roomId].setPosition(newX, newY);
