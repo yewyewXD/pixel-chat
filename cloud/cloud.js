@@ -7,19 +7,18 @@ const MOVE_COOLOFF = 100;
 const SCREEN_WIDTH = 700;
 const SCREEN_HEIGHT = 500; // milliseconds between registering new commands for same user on same core
 
-var lastMoved = {};
-var lastChat = {};
+const lastMoved = {};
+const lastChat = {};
 
 Moralis.Cloud.define("sendChat", async (request) => {
-  console.log("sent chat");
   const user = request.user;
   if (!user) {
     return "You need to login!";
   }
 
-  if (lastMoved[user.id]) {
+  if (lastChat[user.id]) {
     const timeNow = new Date();
-    const lastTime = lastMoved[user.id];
+    const lastTime = lastChat[user.id];
     const timeDiff = timeNow - lastTime;
     logger.info(timeDiff);
 
@@ -28,12 +27,10 @@ Moralis.Cloud.define("sendChat", async (request) => {
     }
   }
 
-  const { room, text, roomId, username } = request.params;
-
+  const { room, text, username } = request.params;
   const Chat = Moralis.Object.extend(`${room}Chat`);
   const chatEntry = new Chat();
   chatEntry.set("text", text);
-  chatEntry.set("roomId", roomId);
   chatEntry.set("player", user);
   chatEntry.set("username", username);
 
@@ -87,6 +84,8 @@ Moralis.Cloud.define("move", async (request) => {
       })
     );
     await firstEntry.save();
+
+    return;
   }
 
   if (isActive === false) {
@@ -125,7 +124,7 @@ Moralis.Cloud.define("playersNearby", async (request) => {
     return "You need to login!";
   }
 
-  const { room, roomId } = request.params;
+  const { room } = request.params;
 
   const Room = Moralis.Object.extend(room);
   const query = new Moralis.Query(Room);
@@ -151,8 +150,8 @@ Moralis.Cloud.define("playersNearby", async (request) => {
     //   userEntry.get("y") - DRAW_DISTANCE
     // );
     nearbyPlayerQuery.equalTo("isActive", true);
-    nearbyPlayerQuery.notEqualTo("objectId", roomId);
-    const nearByPlayers = await nearbyPlayerQuery.find({ useMasterKey: true });
+    nearbyPlayerQuery.notEqualTo("player", user);
+    const nearByPlayers = await nearbyPlayerQuery.find();
     return nearByPlayers;
   } else {
     return "Caller of this function could not be found!";
