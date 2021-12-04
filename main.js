@@ -251,10 +251,12 @@ function loadGame() {
 
       // if user were never here
       if (!users[roomId]) {
-        // remember my position and id
-        myPositionX = newX;
-        myPositionY = newY;
-        myRoomId = roomId;
+        if (player.id === currentUser.id) {
+          // remember my position and id
+          myPositionX = newX;
+          myPositionY = newY;
+          myRoomId = roomId;
+        }
 
         // create new character
         users[roomId] = this.add.rectangle(
@@ -282,7 +284,7 @@ function loadGame() {
         );
       } else if (
         // change my position
-        roomId === myRoomId &&
+        player.id === currentUser.id &&
         (newX !== myPositionX || newY !== myPositionY) &&
         moved.get("queueId") === currentQueueId
       ) {
@@ -293,6 +295,7 @@ function loadGame() {
         );
         myPositionX = newX;
         myPositionY = newY;
+        // remove player character from room
       } else if (moveIsActive === false && moved.className === currentRoom) {
         users[roomId].destroy();
         users[roomId] = undefined;
