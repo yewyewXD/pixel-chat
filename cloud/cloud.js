@@ -69,6 +69,7 @@ Moralis.Cloud.define("move", async (request) => {
     const firstEntry = new Room();
     firstEntry.set("player", user);
     firstEntry.set("username", username);
+    firstEntry.set("isActive", true);
     firstEntry.set(
       "x",
       getRandomInt({
@@ -93,6 +94,8 @@ Moralis.Cloud.define("move", async (request) => {
   } else if (isActive) {
     roomEntry.set("isActive", true);
   }
+
+  roomEntry.set("username", username);
 
   if (direction == "up") {
     roomEntry.set("y", roomEntry.get("y") - MOVE_SPEED);
