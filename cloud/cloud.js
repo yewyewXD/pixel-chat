@@ -45,8 +45,7 @@ Moralis.Cloud.define("sendChat", async (request) => {
 Moralis.Cloud.define("move", async (request) => {
   const user = request.user;
   if (!user) {
-    alert("You need to login!");
-    return;
+    return "You need to login!";
   }
 
   if (lastMoved[user.id]) {
@@ -56,7 +55,6 @@ Moralis.Cloud.define("move", async (request) => {
     logger.info(timeDiff);
 
     if (timeDiff < MOVE_COOLOFF) {
-      alert("moves locked for this user - cooling off");
       return "moves locked for this user - cooling off";
     }
   }
