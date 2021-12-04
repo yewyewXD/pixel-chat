@@ -48,8 +48,8 @@ window.onload = () => {
   highlightRoomButton("Lobby");
 
   if (
-    JSON.parse(window.localStorage.getItem("currentUser"))?.expiry <=
-      new Date() ||
+    +JSON.parse(window.localStorage.getItem("currentUser"))?.expiry <=
+      new Date().getTime() ||
     !currentUser?.id
   ) {
     window.localStorage.removeItem("currentUser");
@@ -88,7 +88,7 @@ async function login() {
     console.log(user);
     const storedUser = {
       user,
-      expiry: new Date() + 3.6e6, // 1 hour
+      expiry: new Date().getTime() + 3600000, // 1 hour
     };
     window.localStorage.setItem("currentUser", JSON.stringify(storedUser));
     loginScreenElement.style.opacity = 0;
