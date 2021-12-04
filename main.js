@@ -21,6 +21,9 @@ let hasDoneCoolOff = true;
 const coolOffPercentEl = document.getElementById("cool-off-percentage");
 const coolOffCircle = document.querySelector(".StrokedCircle");
 
+let users = [];
+let usernames = [];
+
 let myPositionX = 0;
 let myPositionY = 0;
 let myRoomId = "";
@@ -108,6 +111,9 @@ async function logout() {
 async function selectRoom(room) {
   const previousRoom = currentRoom;
   if (previousRoom === room) return;
+
+  users = [];
+  usernames = [];
 
   highlightRoomButton(room);
   // previous room -> inactive
@@ -218,9 +224,6 @@ function loadGame() {
 
   game = new Phaser.Game(config);
 
-  let users = [];
-  let usernames = [];
-
   function preload() {
     context = this;
   }
@@ -241,9 +244,13 @@ function loadGame() {
     const query = new Moralis.Query(currentRoom);
     const subscription = await query.subscribe();
     subscription.on("update", (moved) => {
+      if (moved.className !== currentRoom) return;
+
+      console.log({ moved, currentRoom, users, usernames });
       const roomId = moved.id;
       const newX = moved.get("x");
       const newY = moved.get("y");
+      const moveIsActive = moved.get("isActive");
 
       // if I were never here
       if (!users[roomId]) {
@@ -284,14 +291,11 @@ function loadGame() {
         );
         myPositionX = newX;
         myPositionY = newY;
-      } else if (
-        moved.get("isActive") === false &&
-        moved.className === currentRoom
-      ) {
+      } else if (moveIsActive === false && moved.className === currentRoom) {
         users[roomId].destroy();
-        users[roomId] = null;
+        users[roomId] = undefined;
         usernames[roomId].destroy();
-        usernames[roomId] = null;
+        usernames[roomId] = undefined;
       } else {
         // change other player's position
         users[roomId].setPosition(newX, newY);
