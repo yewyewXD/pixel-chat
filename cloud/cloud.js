@@ -14,8 +14,7 @@ Moralis.Cloud.define("sendChat", async (request) => {
   console.log("sent chat");
   const user = request.user;
   if (!user) {
-    alert("You need to login!");
-    return;
+    return "You need to login!";
   }
 
   if (lastMoved[user.id]) {
@@ -25,7 +24,6 @@ Moralis.Cloud.define("sendChat", async (request) => {
     logger.info(timeDiff);
 
     if (timeDiff < MOVE_COOLOFF) {
-      alert("chat locked for this user - cooling off");
       return "chat locked for this user - cooling off";
     }
   }
@@ -126,8 +124,7 @@ Moralis.Cloud.define("playersNearby", async (request) => {
   const user = request.user;
 
   if (!user) {
-    alert("You need to login!");
-    return;
+    return "You need to login!";
   }
 
   const { room, roomId } = request.params;
