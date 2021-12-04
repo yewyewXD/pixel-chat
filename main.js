@@ -11,12 +11,14 @@ let gameInitialized = false;
 let cursors;
 
 const PLAYER_SIZE = 20;
-const MOVE_SPEED = 10;
-let lastMove = 0; // date
-const buttonsLocked = {};
+const SCREEN_WIDTH = 700;
+const SCREEN_HEIGHT = 500;
 
-const MOVE_COOLOFF = 300;
+let lastMove = 0; // date
 let hasDoneCoolOff = true;
+const buttonsLocked = {};
+const MOVE_SPEED = 10;
+const MOVE_COOLOFF = 300;
 const coolOffPercentEl = document.getElementById("cool-off-percentage");
 const coolOffCircle = document.querySelector(".StrokedCircle");
 
@@ -30,13 +32,16 @@ let myUsername = window.localStorage.getItem("username") || "";
 
 // server move request queue
 let currentQueueId = 0;
-const currentRoomElement = document.getElementById("current-room");
 let currentRoom = "Lobby";
+const currentRoomElement = document.getElementById("current-room");
 
 const loginScreenElement = document.querySelector(".LoginScreen");
 const loginBtnEl = document.getElementById("login-btn");
 const logoutBtnEl = document.getElementById("logout-btn");
 
+let lastChat = 0; // date
+let doneChatCoolOff = false;
+const CHAT_COOLOFF = 300;
 const chatElement = document.querySelector(".Chat");
 const chatViewElement = document.querySelector(".Chat__View");
 const chatInputEl = document.querySelector(".ChatForm__Input");
@@ -190,8 +195,8 @@ function loadGame() {
   const config = {
     type: Phaser.AUTO,
     parent: "phaser-parent",
-    width: 700,
-    height: 500,
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT,
     scene: {
       preload: preload,
       create: create,
@@ -349,25 +354,34 @@ function loadGame() {
   async function update() {
     if (!gameInitialized) return;
 
-    // dont move if cool off hasnt passed
+    // rate-limit move
     if (new Date() - lastMove < MOVE_COOLOFF) {
       if (hasDoneCoolOff) hasDoneCoolOff = false;
       const coolOffPercent = Math.round(
         ((new Date() - lastMove) / MOVE_COOLOFF) * 100
       );
       coolOffPercentEl.innerText = `${coolOffPercent} %`;
-      if (coolOffCircle.style !== "stroke-dasharray: 440 !important") {
+      if (coolOffCircle.style !== "stroke: black !important") {
         coolOffCircle.style = "stroke: black !important";
       }
-      return;
     } else if (!hasDoneCoolOff) {
       hasDoneCoolOff = true;
       coolOffPercentEl.innerText = "100%";
       coolOffCircle.style = `stroke: red !important`;
     }
 
-    if (cursors.up.isDown) {
-      if (!buttonsLocked["up"]) {
+    // rate-limit chat
+    if (new Date() - lastChat < CHAT_COOLOFF) {
+      if (doneChatCoolOff) doneChatCoolOff = false;
+      console.log("chat CD");
+      return;
+    } else if (!doneChatCoolOff) {
+      doneChatCoolOff = true;
+      console.log("done chat CD");
+    }
+
+    if (hasDoneCoolOff) {
+      if (cursors.up.isDown && !buttonsLocked["up"]) {
         console.log("UP is pressed");
 
         myPositionY -= MOVE_SPEED;
@@ -388,9 +402,7 @@ function loadGame() {
         });
         console.log(moveResult);
         buttonsLocked["up"] = false;
-      }
-    } else if (cursors.left.isDown) {
-      if (!buttonsLocked["left"]) {
+      } else if (cursors.left.isDown && !buttonsLocked["left"]) {
         console.log("LEFT is pressed");
 
         myPositionX -= MOVE_SPEED;
@@ -411,9 +423,7 @@ function loadGame() {
         });
         console.log(moveResult);
         buttonsLocked["left"] = false;
-      }
-    } else if (cursors.down.isDown) {
-      if (!buttonsLocked["down"]) {
+      } else if (cursors.down.isDown && !buttonsLocked["down"]) {
         console.log("DOWN is pressed");
 
         myPositionY += MOVE_SPEED;
@@ -434,9 +444,7 @@ function loadGame() {
         });
         console.log(moveResult);
         buttonsLocked["down"] = false;
-      }
-    } else if (cursors.right.isDown) {
-      if (!buttonsLocked["right"]) {
+      } else if (cursors.right.isDown && !buttonsLocked["right"]) {
         console.log("RIGHT is pressed");
 
         myPositionX += MOVE_SPEED;
