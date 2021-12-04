@@ -1,10 +1,9 @@
 Moralis.initialize("UuODzE6wvQ33uBGpHNI9psoJLOpCF2EZD0yG2E6d"); // Application id from moralis.io
 Moralis.serverURL = "https://vrbdy1tqiytg.usemoralis.com:2053/server"; //Server url from moralis.io
-Moralis.masterKey = "qXaCDPBjdEdmvFoTFFP5JLHgzpLr5Ilob2LLYd3d";
 
 const currentUser =
   Moralis.User.current() ||
-  JSON.parse(window.localStorage.getItem("currentUser"))?.user;
+  JSON.parse(window.localStorage.getItem("currentUser"));
 
 let context;
 let game;
@@ -44,24 +43,11 @@ const chatInputEl = document.querySelector(".ChatForm__Input");
 const chatUsernameEl = document.querySelector(".ChatForm__Username");
 
 window.onload = () => {
-  currentRoomElement.innerText = currentRoom;
   highlightRoomButton("Lobby");
-
-  if (
-    +JSON.parse(window.localStorage.getItem("currentUser"))?.expiry <=
-      new Date().getTime() ||
-    !currentUser?.id
-  ) {
-    window.localStorage.removeItem("currentUser");
-
-    if (loginScreenElement.style.display !== "flex") {
-      loginScreenElement.style.display = "flex";
-    }
-  }
-
-  if (myUsername) {
-    chatUsernameEl.innerText = myUsername;
-  }
+  currentRoomElement.innerText = "Lobby";
+  window.localStorage.removeItem("currentUser");
+  window.localStorage.removeItem("username");
+  loginScreenElement.style.display = "flex";
 };
 
 const nameFormEl = document.getElementById("name-form");
@@ -85,12 +71,7 @@ nameFormEl.addEventListener("submit", handleInputUsername);
 async function login() {
   const user = await Moralis.Web3.authenticate();
   if (user) {
-    console.log(user);
-    const storedUser = {
-      user,
-      expiry: new Date().getTime() + 3600000, // 1 hour
-    };
-    window.localStorage.setItem("currentUser", JSON.stringify(storedUser));
+    window.localStorage.setItem("currentUser", JSON.stringify(user));
     loginScreenElement.style.opacity = 0;
     setTimeout(() => {
       loginScreenElement.style.display = "none";
