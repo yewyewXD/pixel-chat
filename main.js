@@ -168,6 +168,15 @@ async function leaveRoom() {
   }
 }
 
+async function showJoinLeaveMsg({ name, type }) {
+  const newChatText = document.createElement("div");
+  newChatText.style.fontSize = "20px";
+  newChatText.style.margin = "2px 0";
+  const actionMsg = type === "join" ? "joined" : "left";
+  newChatText.innerText = `[${name} has ${actionMsg} the room]`;
+  chatViewElement.appendChild(newChatText);
+}
+
 async function handleSendChat(e) {
   e.preventDefault();
   lastChat = new Date();
@@ -251,6 +260,7 @@ function loadGame() {
 
       // if user were never here
       if (!users[roomId]) {
+        showJoinLeaveMsg({ name: playerUsername, type: "join" });
         if (player.id === currentUser.id) {
           // remember my position and id
           myPositionX = newX;
@@ -301,6 +311,7 @@ function loadGame() {
         users[roomId] = undefined;
         usernames[roomId].destroy();
         usernames[roomId] = undefined;
+        showJoinLeaveMsg({ name: playerUsername, type: "leave" });
       } else {
         // change other player's position & username
         users[roomId].setPosition(newX, newY);
