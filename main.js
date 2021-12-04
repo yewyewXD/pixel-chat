@@ -302,12 +302,13 @@ function loadGame() {
         usernames[roomId].destroy();
         usernames[roomId] = undefined;
       } else {
-        // change other player's position
+        // change other player's position & username
         users[roomId].setPosition(newX, newY);
         usernames[roomId].setPosition(
           newX - usernames[roomId].width / 2,
           newY - 35
         );
+        usernames[roomId].setText(playerUsername);
       }
     });
     //just to register the player
