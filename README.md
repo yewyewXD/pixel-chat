@@ -1,23 +1,35 @@
-# multiplayer-poc
+# Pixel Chat
 
-This is an implementation of a basic web3 game that logs in user with a wallet like Metamask and allows for real-time movement in game.
+## Motivation
 
-NodeJS is single-threaded and therefore needs to be deployed as a cluster to make use of all cores. This application is automatically deployed as several processes (one of each core) and load balanced accordingly in order to take advantage of the whole machine.
+On 24 Nov 2021, there was a weekly challenge in [Moralis DAO](https://discord.com/invite/wV7nkDYGyZ), which is to build a multiplayer game using their starter boilerplate. The reward will be a unique NFT that you could only get by winning the challenge (or resales). I have been dreaming to hold something like this from Moralis Web3, my dream company, so I hopped on this challenge, even with 0 experience in game development.
+<br>
+Read more here on LinkedIn if you are interested to know more about the story.
 
+## Status
 
-1) All moves go through the backend - no cheating allowed and NFTs/tokens can be awarded safely in the `move` function of cloud.js
-2) Client lag needs to be compensated by the game engine using movement extrapolation and prediction - [Read more](https://www.gabrielgambetta.com/client-server-game-architecture.html)
-3) When the game loads the server only gives the client the position of the players that are close to the player playing the game - adjust `DRAW_DISTANCE` in `cloud.js` to change this. Room for improvement: this DRAW_DISTANCE needs to be set in live-query so when user gets continuous updates its also applied.
-4) Room for improvement: add join/leave logic so players can change rooms
-5) Server has rate limits so users can't spam endless moves - rate limit is ensured by `MOVE_COOLOFF` constant in `cloud.js` - this cooloff is per core in the server. There is also `MOVE_COOLOFF` on client side to ensure the client is rate limiting itself.
+**Success:** [See Live](https://yewyewxd.github.io/pixel-chat/)
 
+Started on: 27 Nov 2021 <br>
 
+Completed on: 4 Dec 2020 <br>
 
-# Handling MANY players
-1) The best would be to limit number of connections for each server to a few hundred (depends on server specs)
-2) Let the user choose a "world" they want to join - each world runs on a separate server - kinda like Runescape
-3) Each world is a separate Moralis Server
-4) Worlds can be added in real time as the user base growth 
-5) Worlds can have different settings - for example PvP enabled/disabled
+## Screenshots
 
+coming soon
 
+## Tech/framework used
+
+- HTML
+- CSS
+- JavaScript
+- Moralis
+
+## Credits
+
+- Cloned from one of the Moralis boilerplates - [view repo](https://github.com/ethereum-boilerplate/multiplayer-poc)
+- Learned from videos of [Moralis Web3](https://www.youtube.com/c/MoralisWeb3)
+  1. NFT Game Part 1 - [link here](https://youtu.be/F7XN8CzdDPg)
+  2. NFT Game Part 2 - [link here](https://youtu.be/FIutG9R38ko)
+  3. How to build NFT game quickly - [link here](https://youtu.be/CsdhJrD9m1M)
+- Button hover effect [tutorial](https://youtu.be/ois8ipBUgfk) from Online Tutorials
