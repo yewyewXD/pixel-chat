@@ -259,7 +259,7 @@ function loadGame() {
       const player = moved.get("player");
 
       // if user were never here
-      if (!users[roomId]) {
+      if (!users[roomId] && moveIsActive) {
         showJoinLeaveMsg({ name: playerUsername, type: "join" });
         if (player.id === currentUser.id) {
           // remember my position and id
