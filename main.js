@@ -8,7 +8,6 @@ const currentUser =
 let context;
 let game;
 let gameInitialized = false;
-let cursors;
 
 const PLAYER_SIZE = 20;
 const SCREEN_WIDTH = 700;
@@ -226,7 +225,16 @@ function loadGame() {
 
     if (!currentUser) return;
 
-    cursors = this.input.keyboard.createCursorKeys();
+    this.leftKey = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.LEFT
+    );
+    this.rightKey = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.RIGHT
+    );
+    this.upKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+    this.downKey = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.DOWN
+    );
 
     const query = new Moralis.Query(currentRoom);
     const subscription = await query.subscribe();
@@ -393,7 +401,7 @@ function loadGame() {
     }
 
     if (hasDoneCoolOff) {
-      if (cursors.up.isDown && !buttonsLocked["up"]) {
+      if (this.upKey.isDown && !buttonsLocked["up"]) {
         console.log("UP is pressed");
 
         myPositionY -= MOVE_SPEED;
@@ -414,7 +422,7 @@ function loadGame() {
         });
         console.log(moveResult);
         buttonsLocked["up"] = false;
-      } else if (cursors.left.isDown && !buttonsLocked["left"]) {
+      } else if (this.leftKey.isDown && !buttonsLocked["left"]) {
         console.log("LEFT is pressed");
 
         myPositionX -= MOVE_SPEED;
@@ -435,7 +443,7 @@ function loadGame() {
         });
         console.log(moveResult);
         buttonsLocked["left"] = false;
-      } else if (cursors.down.isDown && !buttonsLocked["down"]) {
+      } else if (this.downKey.isDown && !buttonsLocked["down"]) {
         console.log("DOWN is pressed");
 
         myPositionY += MOVE_SPEED;
@@ -456,7 +464,7 @@ function loadGame() {
         });
         console.log(moveResult);
         buttonsLocked["down"] = false;
-      } else if (cursors.right.isDown && !buttonsLocked["right"]) {
+      } else if (this.rightKey.isDown && !buttonsLocked["right"]) {
         console.log("RIGHT is pressed");
 
         myPositionX += MOVE_SPEED;
