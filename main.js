@@ -284,7 +284,10 @@ function loadGame() {
         );
         myPositionX = newX;
         myPositionY = newY;
-      } else if (moved.get("isActive") === false) {
+      } else if (
+        moved.get("isActive") === false &&
+        moved.className === currentRoom
+      ) {
         users[roomId].destroy();
         users[roomId] = null;
         usernames[roomId].destroy();
