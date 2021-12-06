@@ -20,7 +20,11 @@ Completed on: 4 Dec 2020 <br>
 
 ## Screenshots
 
-coming soon
+![Login](https://github.com/yewyewXD/pixel-chat/blob/master/images/login.PNG)
+<br>
+![Lobby](https://github.com/yewyewXD/pixel-chat/blob/master/images/lobby.PNG)
+<br>
+![Game Demo](https://github.com/yewyewXD/pixel-chat/blob/master/images/game.PNG)
 
 ## Tech/framework used
 
