@@ -8,7 +8,7 @@ On 24 Nov 2021, there was a weekly challenge in [Moralis DAO](https://discord.co
 I have been dreaming to hold something like this from Moralis Web3, my dream company, so I hopped on this challenge, even with 0 experience in game development.
 <br>
 <br>
-Read more here on LinkedIn if you are interested to know more about the story.
+Read more [here](https://www.linkedin.com/pulse/finishing-what-i-have-started-even-after-losing-kangwei-yew) on LinkedIn if you are interested to know more about the story.
 
 ## Status
 
