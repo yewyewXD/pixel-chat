@@ -1,5 +1,5 @@
-Moralis.initialize("UuODzE6wvQ33uBGpHNI9psoJLOpCF2EZD0yG2E6d"); // Application id from moralis.io
-Moralis.serverURL = "https://vrbdy1tqiytg.usemoralis.com:2053/server"; //Server url from moralis.io
+Moralis.initialize("UTWiusSu2P8dn1H8LK5Q6N4vC7w1wqjsU0nE6peb");
+Moralis.serverURL = "https://aefj6iraiwkm.usemoralis.com:2053/server";
 
 const currentUser =
   Moralis.User.current() ||
