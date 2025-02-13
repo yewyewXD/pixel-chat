@@ -2,7 +2,7 @@
 
 ## Motivation
 
-On 24 Nov 2021, there was a weekly challenge in [Moralis DAO](https://discord.com/invite/wV7nkDYGyZ), which is to build a multiplayer game using their starter boilerplate. The reward will be a unique NFT that you could only get by winning the challenge (or resales).
+On 24 Nov 2021, there was a weekly challenge in [Moralis DAO](https://developers.moralis.com/joindiscord/), which is to build a multiplayer game using their starter boilerplate. The reward will be a unique NFT that you could only get by winning the challenge (or resales).
 <br>
 <br>
 I have been dreaming to hold something like this from Moralis Web3, my dream company, so I hopped on this challenge, even with 0 experience in game development.
@@ -11,8 +11,6 @@ I have been dreaming to hold something like this from Moralis Web3, my dream com
 Read more [here](https://www.linkedin.com/pulse/finishing-what-i-have-started-even-after-losing-kangwei-yew) on LinkedIn if you are interested to know more about the story.
 
 ## Status
-
-**Success:** [See Live](https://yewyewxd.github.io/pixel-chat/)
 
 Started on: 27 Nov 2021 <br>
 
